@@ -99,7 +99,7 @@ export function StreakForm() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Create New Streak</Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col justify-center gap-2 overflow-scroll p-4 sm:max-w-[625px] lg:p-8">
