@@ -1,34 +1,26 @@
+## Tech log
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+Initialized SST in project root via [https://docs.sst.dev/start/nextjs](https://docs.sst.dev/start/nextjs)
 
-First, run the development server:
+Implemented next auth with Github Provider and DynamoDB provider, extended session object with userId.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+Added (shadcn)[https://ui.shadcn.com/] config and components.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Added (ElectroDB)[https://electrodb.dev/en/core-concepts/introduction/] config.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Create Streaks
+- View Streaks
 
-## Learn More
+## Todos
 
-To learn more about Next.js, take a look at the following resources:
+- Increase streaks
+- Restart streaks
+- Blog
+- Notifications
+- Automated validations (ex: posting once a week to linkedin, scrape linkedin and validate)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+notes: AWS scheduler, email channel
