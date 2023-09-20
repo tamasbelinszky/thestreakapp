@@ -29,6 +29,8 @@ import {
 } from "./ui/form";
 
 import { useSession } from "next-auth/react";
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
@@ -71,9 +73,10 @@ const defaultValues: Partial<AccountFormValues> = {
   // dob: new Date("2023-01-23"),
 };
 
-export function StreakForm() {
+export const StreakForm = () => {
   const [open, setOpen] = useState(false);
   const { data: sessionData } = useSession();
+  const router = useRouter();
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(streakFormSchema),
     defaultValues,
@@ -94,6 +97,7 @@ export function StreakForm() {
         userId,
       }),
     });
+    router.refresh();
     setOpen(false);
   }
 
@@ -258,4 +262,4 @@ export function StreakForm() {
       </DialogContent>
     </Dialog>
   );
-}
+};

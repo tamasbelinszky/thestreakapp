@@ -1,12 +1,7 @@
-"use client";
-
 import { StreakForm } from "@/components/StreakForm";
 import StreakList from "@/components/StreakList";
-import { useState } from "react";
 
 export default function Page() {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="flex flex-col items-center justify-center">
       {/* <StreakForm />; */}

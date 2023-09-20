@@ -1,5 +1,4 @@
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 import { z } from "zod";
 import { StreakCard } from "./StreakCard";
 
@@ -19,16 +18,29 @@ const streaksSchema = z.array(streakSchema);
 
 type Streaks = z.infer<typeof streaksSchema>;
 
-export default function StreakList() {
-  const { data: sessionData } = useSession();
-  const [streaks, setStreaks] = useState<Streaks>([]);
+async function getData() {
+  const maybeUser = await auth();
 
-  useEffect(() => {
-    const userId = sessionData?.user?.id;
-    if (userId) {
-      listStreaks(userId).then((data) => setStreaks(data));
-    }
-  }, [sessionData]);
+  const userId = maybeUser?.user?.id;
+
+  if (!userId) {
+    throw new Error("User ID not found");
+  }
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/streak?userId=${userId}`,
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch streaks");
+  }
+
+  const json = await res.json();
+  return streaksSchema.parse(json.data);
+}
+
+export default async function StreakList() {
+  const streaks = await getData();
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -44,12 +56,4 @@ export default function StreakList() {
       ))}
     </div>
   );
-}
-
-async function listStreaks(userId: string): Promise<Streaks> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/streak?userId=${userId}`,
-  );
-  const json = await res.json();
-  return streaksSchema.parse(json.data);
 }

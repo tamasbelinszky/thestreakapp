@@ -13,7 +13,8 @@ const streakInputSchema = z.object({
     }),
   description: z
     .string({
-      required_error: "Please select a language.",
+      required_error:
+        "Please add a description which can remind you why you started this streak.",
     })
     .max(256, {
       message: "Description must not be longer than 256 characters.",
