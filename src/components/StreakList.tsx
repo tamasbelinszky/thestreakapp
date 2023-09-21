@@ -1,8 +1,10 @@
 import { auth } from "@/app/api/auth/[...nextauth]/route";
+import { getStreaksByUserId } from "@/lib/streak";
 import { z } from "zod";
 import { StreakCard } from "./StreakCard";
 
 const streakSchema = z.object({
+  id: z.string(),
   name: z.string(),
   description: z.string(),
   startDate: z.number(),
@@ -27,16 +29,9 @@ async function getData() {
     throw new Error("User ID not found");
   }
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/streak?userId=${userId}`,
-  );
+  const res = await getStreaksByUserId(userId);
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch streaks");
-  }
-
-  const json = await res.json();
-  return streaksSchema.parse(json.data);
+  return streaksSchema.parse(res.data);
 }
 
 export default async function StreakList() {
@@ -46,6 +41,7 @@ export default async function StreakList() {
     <div className="flex w-full flex-col gap-2">
       {streaks.map((streak, index) => (
         <StreakCard
+          id={streak.id}
           key={index}
           name={streak.name}
           description={streak.description}

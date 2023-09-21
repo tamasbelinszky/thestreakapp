@@ -71,7 +71,7 @@ const StreakEntity = new Entity(
         },
         sk: {
           field: "sk",
-          composite: ["userId", "createdAt"],
+          composite: [],
         },
       },
       byUserId: {
@@ -93,12 +93,14 @@ const StreakEntity = new Entity(
 
 type CreateStreakInput = CreateEntityItem<typeof StreakEntity>;
 
-export const createStreak = async (
-  input: CreateEntityItem<typeof StreakEntity>,
-) => {
+export const createStreak = async (input: CreateStreakInput) => {
   return StreakEntity.put(input).go();
 };
 
 export const getStreaksByUserId = async (userId: string) => {
   return StreakEntity.query.byUserId({ userId }).go();
+};
+
+export const deleteStreakById = async (id: string) => {
+  return StreakEntity.delete({ id }).go();
 };

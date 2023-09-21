@@ -47,11 +47,10 @@ export default {
         },
         routes: {
           "POST /streak": "lambdas/createStreak.handler",
-          "GET /streak": "lambdas/getStreaksByUserId.handler",
         },
       });
       const site = new NextjsSite(stack, "site", {
-        bind: [api],
+        bind: [api, table],
         environment: {
           NEXT_PUBLIC_API_URL: api.url,
           NEXT_PUBLIC_TABLE_NAME: table.tableName,
