@@ -1,13 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import {
   Command,
@@ -28,10 +24,11 @@ import {
   FormMessage,
 } from "./ui/form";
 
-import { useSession } from "next-auth/react";
-
+import { StreakFormInput, createStreak } from "@/lib/streak";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -43,63 +40,21 @@ const periods = [
   { label: "Yearly", value: "yearly" },
 ] as const;
 
-const streakFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "Name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Name must not be longer than 30 characters.",
-    }),
-  description: z
-    .string({
-      required_error: "Please select a language.",
-    })
-    .max(256, {
-      message: "Description must not be longer than 256 characters.",
-    }),
-  startDate: z.date({
-    required_error: "A start date is required to count the streak.",
-  }),
-  period: z.enum(["daily", "weekly", "monthly", "yearly"]),
-});
-
-type AccountFormValues = z.infer<typeof streakFormSchema>;
-
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-  // name: "Your name",
-  // dob: new Date("2023-01-23"),
-};
-
 export const StreakForm = () => {
   const [open, setOpen] = useState(false);
-  const { data: sessionData } = useSession();
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const form = useForm<AccountFormValues>({
-    resolver: zodResolver(streakFormSchema),
-    defaultValues,
-  });
+  const form = useForm<StreakFormInput>({});
 
-  async function onSubmit(data: AccountFormValues) {
-    console.log(data);
-    const userId = sessionData?.user?.id;
+  const onSubmit = form.handleSubmit(async (data) => {
+    startTransition(async () => {
+      await createStreak(data);
+      form.reset();
+      router.refresh();
 
-    if (!userId) {
-      throw new Error("User id is not found.");
-    }
-
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/streak`, {
-      method: "POST",
-      body: JSON.stringify({
-        ...data,
-        userId,
-      }),
+      setOpen(false);
     });
-    router.refresh();
-    setOpen(false);
-  }
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -109,10 +64,7 @@ export const StreakForm = () => {
       <DialogContent className="flex flex-col justify-center gap-2 overflow-scroll p-4 sm:max-w-[625px] lg:p-8">
         <DialogTitle>Create New Streak</DialogTitle>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 lg:max-w-md"
-          >
+          <form onSubmit={onSubmit} className="space-y-8 lg:max-w-md">
             <FormField
               control={form.control}
               name="name"
@@ -256,7 +208,9 @@ export const StreakForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Start a new streak</Button>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Loading..." : "Start a new streak"}
+            </Button>
           </form>
         </Form>
       </DialogContent>

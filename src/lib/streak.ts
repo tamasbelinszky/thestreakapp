@@ -1,5 +1,9 @@
+"use server";
+
+import { auth } from "@/app/api/auth/[...nextauth]/route";
 import { randomUUID } from "crypto";
-import { CreateEntityItem, Entity } from "electrodb";
+import { Entity } from "electrodb";
+import { z } from "zod";
 import { Dynamo } from "./dynamo";
 
 const validationTypes = ["manual"] as const;
@@ -91,10 +95,44 @@ const StreakEntity = new Entity(
   Dynamo.Service,
 );
 
-type CreateStreakInput = CreateEntityItem<typeof StreakEntity>;
+const streakFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: "Name must be at least 2 characters.",
+    })
+    .max(30, {
+      message: "Name must not be longer than 30 characters.",
+    }),
+  description: z
+    .string({
+      required_error: "Please select a language.",
+    })
+    .max(256, {
+      message: "Description must not be longer than 256 characters.",
+    }),
+  startDate: z.date({
+    required_error: "A start date is required to count the streak.",
+  }),
+  period: z.enum(["daily", "weekly", "monthly", "yearly"]),
+});
 
-export const createStreak = async (input: CreateStreakInput) => {
-  return StreakEntity.put(input).go();
+export type StreakFormInput = z.infer<typeof streakFormSchema>;
+
+export const createStreak = async (input: StreakFormInput) => {
+  const maybeUser = await auth();
+  const maybeUserId = maybeUser?.user?.id;
+  if (!maybeUserId) {
+    throw new Error("Unauthorized");
+  }
+
+  const validatedInput = streakFormSchema.parse(input);
+  return StreakEntity.put({
+    ...validatedInput,
+    startDate: validatedInput.startDate.getTime(),
+    userId: maybeUserId,
+    streak: 0,
+  }).go();
 };
 
 export const getStreaksByUserId = async (userId: string) => {

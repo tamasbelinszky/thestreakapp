@@ -1,5 +1,5 @@
 "use client";
-import { getBaseUrl } from "@/getBaseUrl";
+import { deleteStreakById } from "@/lib/streak";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon, ShareIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -70,9 +70,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
             </button>
             <button
               onClick={async () => {
-                await fetch(`${getBaseUrl()}/api/streak?id=${id}`, {
-                  method: "DELETE",
-                });
+                await deleteStreakById(id);
                 router.refresh();
               }}
               className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 text-gray-500 hover:bg-gray-200 active:bg-gray-300"
