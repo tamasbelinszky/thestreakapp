@@ -84,9 +84,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
         </Popover>
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-sm text-gray-500">
-          Started on: {formattedDate}
-        </span>
+        <span className="text-sm text-gray-500">Started on: {formattedDate}</span>
 
         <span className="text-sm text-gray-500">
           {period.charAt(0).toUpperCase() + period.slice(1)} Streak: {streak}

@@ -12,23 +12,9 @@ import { z } from "zod";
 
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "./ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./ui/command";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Textarea } from "./ui/textarea";
@@ -115,9 +101,8 @@ export const StreakForm = () => {
                     <Textarea placeholder="Streak's description" {...field} />
                   </FormControl>
                   <FormDescription className="hidden lg:flex">
-                    You can add a description to your streak which can be seen
-                    on the given streak item. This can remind you of the purpose
-                    of the streak.
+                    You can add a description to your streak which can be seen on the given streak item. This can remind
+                    you of the purpose of the streak.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -139,11 +124,7 @@ export const StreakForm = () => {
                             !field.value && "text-muted-foreground",
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -153,19 +134,15 @@ export const StreakForm = () => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date: Date) =>
-                          new Date(2024) > new Date() ||
-                          date < new Date("1900-01-01")
-                        }
+                        disabled={(date: Date) => new Date(2024) > new Date() || date < new Date("1900-01-01")}
                         initialFocus
                         required
                       />
                     </PopoverContent>
                   </Popover>
                   <FormDescription className="hidden lg:flex">
-                    This is the date that your streak will start. (If you want
-                    to continue a streak that you have already started, you can
-                    set the start date to the date you started the streak.)
+                    This is the date that your streak will start. (If you want to continue a streak that you have
+                    already started, you can set the start date to the date you started the streak.)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -190,8 +167,7 @@ export const StreakForm = () => {
                     />
                   </FormControl>
                   <FormDescription className="hidden lg:flex">
-                    This is the number of times you will do the action in the
-                    given period.
+                    This is the number of times you will do the action in the given period.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -209,15 +185,10 @@ export const StreakForm = () => {
                         <Button
                           variant={"outline"}
                           role="combobox"
-                          className={cn(
-                            "w-[200px] justify-between",
-                            !field.value && "text-muted-foreground",
-                          )}
+                          className={cn("w-[200px] justify-between", !field.value && "text-muted-foreground")}
                         >
                           {field.value
-                            ? periods.find(
-                                (period) => period.value === field.value,
-                              )?.label
+                            ? periods.find((period) => period.value === field.value)?.label
                             : "Select period"}
                           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
@@ -239,9 +210,7 @@ export const StreakForm = () => {
                               <CheckIcon
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  period.value === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
+                                  period.value === field.value ? "opacity-100" : "opacity-0",
                                 )}
                               />
                               {period.label}

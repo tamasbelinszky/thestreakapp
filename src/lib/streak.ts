@@ -151,10 +151,7 @@ export const deleteStreakById = async (id: string) => {
 };
 
 export const completeStreakById = async (id: string) => {
-  const result = await StreakEntity.patch({ id })
-    .add({ numberOfTimesCompleted: 1 })
-    .go();
+  const result = await StreakEntity.patch({ id }).add({ numberOfTimesCompleted: 1 }).go();
 
-  const isStreakCompleted =
-    result.data.numberOfTimesCompleted === result.data.numberOfTimesPlanned;
+  const isStreakCompleted = result.data.numberOfTimesCompleted === result.data.numberOfTimesPlanned;
 };

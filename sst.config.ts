@@ -55,6 +55,13 @@ export default {
           NEXT_PUBLIC_API_URL: api.url,
           NEXT_PUBLIC_TABLE_NAME: table.tableName,
         },
+        customDomain:
+          app.stage === "production"
+            ? {
+                domainName: "thestreakapp.com",
+                hostedZone: "thestreakapp.com",
+              }
+            : undefined,
       });
 
       stack.addOutputs({
