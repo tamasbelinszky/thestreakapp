@@ -34,10 +34,15 @@ const StreakEntity = new Entity(
         default: actionTypes[0],
         required: true,
       },
-      numberOfTimes: {
+      numberOfTimesPlanned: {
         type: "number",
         required: true,
         default: 1,
+      },
+      numberOfTimesCompleted: {
+        type: "number",
+        required: true,
+        default: 0,
       },
       description: {
         type: "string",
@@ -115,7 +120,7 @@ const streakFormSchema = z.object({
     required_error: "A start date is required to count the streak.",
   }),
   period: z.enum(["daily", "weekly", "monthly", "yearly"]),
-  numberOfTimes: z.number().optional(),
+  numberOfTimesPlanned: z.number().optional(),
 });
 
 export type StreakFormInput = z.infer<typeof streakFormSchema>;
@@ -143,4 +148,13 @@ export const getStreaksByUserId = async (userId: string) => {
 
 export const deleteStreakById = async (id: string) => {
   return StreakEntity.delete({ id }).go();
+};
+
+export const completeStreakById = async (id: string) => {
+  const result = await StreakEntity.patch({ id })
+    .add({ numberOfTimesCompleted: 1 })
+    .go();
+
+  const isStreakCompleted =
+    result.data.numberOfTimesCompleted === result.data.numberOfTimesPlanned;
 };

@@ -53,7 +53,7 @@ const streakFormSchema = z.object({
     })
     .optional(),
   period: z.enum(["daily", "weekly", "monthly", "yearly"]),
-  numberOfTimes: z.number(),
+  numberOfTimesPlanned: z.number(),
 });
 
 export const StreakForm = () => {
@@ -173,7 +173,7 @@ export const StreakForm = () => {
             />
             <FormField
               control={form.control}
-              name="numberOfTimes"
+              name="numberOfTimesPlanned"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="truncate">Number of times</FormLabel>
@@ -183,7 +183,7 @@ export const StreakForm = () => {
                       type="number"
                       defaultValue={1}
                       min={0}
-                      {...form.register("numberOfTimes", {
+                      {...form.register("numberOfTimesPlanned", {
                         valueAsNumber: true,
                       })}
                       required
