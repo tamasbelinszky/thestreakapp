@@ -4,8 +4,10 @@ import { auth } from "@/app/api/auth/[...nextauth]/route";
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
 import { z } from "zod";
+
 import { Dynamo } from "./dynamo";
 
+const actionTypes = ["linkedInPost"] as const;
 const validationTypes = ["manual"] as const;
 const streakPeriods = ["daily", "weekly", "monthly", "yearly"] as const;
 
@@ -27,13 +29,18 @@ const StreakEntity = new Entity(
         type: "string",
         required: true,
       },
-      name: {
-        type: "string",
+      actionType: {
+        type: actionTypes,
+        default: actionTypes[0],
         required: true,
+      },
+      numberOfTimes: {
+        type: "number",
+        required: true,
+        default: 1,
       },
       description: {
         type: "string",
-        required: true,
       },
       period: {
         type: streakPeriods,
@@ -96,25 +103,19 @@ const StreakEntity = new Entity(
 );
 
 const streakFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "Name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Name must not be longer than 30 characters.",
-    }),
+  // TODO: add linkedInPost validation before adding new action types
+  actionType: z.enum(actionTypes).optional(),
   description: z
-    .string({
-      required_error: "Please select a language.",
-    })
+    .string()
     .max(256, {
       message: "Description must not be longer than 256 characters.",
-    }),
+    })
+    .optional(),
   startDate: z.date({
     required_error: "A start date is required to count the streak.",
   }),
   period: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  numberOfTimes: z.number().optional(),
 });
 
 export type StreakFormInput = z.infer<typeof streakFormSchema>;
@@ -129,6 +130,7 @@ export const createStreak = async (input: StreakFormInput) => {
   const validatedInput = streakFormSchema.parse(input);
   return StreakEntity.put({
     ...validatedInput,
+    actionType: "linkedInPost",
     startDate: validatedInput.startDate.getTime(),
     userId: maybeUserId,
     streak: 0,

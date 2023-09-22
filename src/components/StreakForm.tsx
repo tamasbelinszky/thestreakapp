@@ -1,9 +1,16 @@
 "use client";
 
+import { StreakFormInput, createStreak } from "@/lib/streak";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import {
   Command,
@@ -12,8 +19,7 @@ import {
   CommandInput,
   CommandItem,
 } from "./ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import {
   Form,
   FormControl,
@@ -23,14 +29,8 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-
-import { StreakFormInput, createStreak } from "@/lib/streak";
-import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Input } from "./ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Textarea } from "./ui/textarea";
 
 const periods = [
@@ -40,19 +40,36 @@ const periods = [
   { label: "Yearly", value: "yearly" },
 ] as const;
 
+const streakFormSchema = z.object({
+  description: z
+    .string()
+    .max(256, {
+      message: "Description must not be longer than 256 characters.",
+    })
+    .optional(),
+  startDate: z
+    .any({
+      required_error: "A start date is required to count the streak.",
+    })
+    .optional(),
+  period: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  numberOfTimes: z.number(),
+});
+
 export const StreakForm = () => {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const form = useForm<StreakFormInput>({});
+  const form = useForm<StreakFormInput>({
+    resolver: zodResolver(streakFormSchema),
+  });
 
   const onSubmit = form.handleSubmit(async (data) => {
     startTransition(async () => {
       await createStreak(data);
-      form.reset();
       router.refresh();
-
       setOpen(false);
+      form.reset();
     });
   });
 
@@ -61,22 +78,28 @@ export const StreakForm = () => {
       <DialogTrigger asChild>
         <Button>Create New Streak</Button>
       </DialogTrigger>
-      <DialogContent className="flex flex-col justify-center gap-2 overflow-scroll p-4 sm:max-w-[625px] lg:p-8">
+      <DialogContent className="flex flex-col justify-center gap-1 overflow-scroll p-4 lg:p-8">
         <DialogTitle>Create New Streak</DialogTitle>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-8 lg:max-w-md">
+          <form onSubmit={onSubmit} className="space-y-2 lg:max-w-md">
             <FormField
               control={form.control}
-              name="name"
+              name="actionType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>The action you take</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your name" {...field} />
+                    <fieldset disabled>
+                      <Input
+                        className="disabled bg-gray-800 text-white"
+                        disabled
+                        {...field}
+                        placeholder="Posting on LinkedIn"
+                      />
+                    </fieldset>
                   </FormControl>
                   <FormDescription className="hidden lg:flex">
-                    This is the short name of your streak, this will appear on
-                    the dashboard and in the streak list.
+                    Only posting on LinkedIn is supported for now.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -135,6 +158,7 @@ export const StreakForm = () => {
                           date < new Date("1900-01-01")
                         }
                         initialFocus
+                        required
                       />
                     </PopoverContent>
                   </Popover>
@@ -147,6 +171,32 @@ export const StreakForm = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="numberOfTimes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="truncate">Number of times</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-[200px]"
+                      type="number"
+                      defaultValue={1}
+                      min={0}
+                      {...form.register("numberOfTimes", {
+                        valueAsNumber: true,
+                      })}
+                      required
+                    />
+                  </FormControl>
+                  <FormDescription className="hidden lg:flex">
+                    This is the number of times you will do the action in the
+                    given period.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
             <FormField
               control={form.control}
               name="period"
@@ -175,7 +225,7 @@ export const StreakForm = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-[200px] p-0">
                       <Command>
-                        <CommandInput placeholder="Search period..." />
+                        <CommandInput placeholder="Search period..." required />
                         <CommandEmpty>No period found.</CommandEmpty>
                         <CommandGroup>
                           {periods.map((period) => (

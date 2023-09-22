@@ -1,4 +1,5 @@
 "use client";
+
 import { Button, buttonVariants } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -8,9 +9,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 lg:gap-24">
-      <h1 className="text-3xl font-bold">
-        {data?.user ? `Hello ${data.user.name}! 👋` : "Welcome to thestreak"}
-      </h1>
+      <h1 className="text-3xl font-bold">{data?.user ? `Hello ${data.user.name}! 👋` : "Welcome to thestreak"}</h1>
       {!data && (
         <Button
           onClick={() =>

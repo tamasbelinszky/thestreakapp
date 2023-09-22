@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
 import AuthContext from "./AuthContext";
 import "./globals.css";
 
@@ -10,15 +11,11 @@ export const metadata: Metadata = {
   description: "Create streaks and track your progress. How long can you go?",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="flex min-h-screen w-full flex-col p-6 lg:p-12">
+        <main className="flex min-h-screen w-full flex-col p-4 lg:p-8">
           <AuthContext>{children}</AuthContext>
         </main>
       </body>

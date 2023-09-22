@@ -1,11 +1,12 @@
 import { auth } from "@/app/api/auth/[...nextauth]/route";
 import { getStreaksByUserId } from "@/lib/streak";
 import { z } from "zod";
+
 import { StreakCard } from "./StreakCard";
 
 const streakSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  actionType: z.string(),
   description: z.string(),
   startDate: z.number(),
   period: z.enum(["daily", "weekly", "monthly", "yearly"]),
@@ -43,7 +44,6 @@ export default async function StreakList() {
         <StreakCard
           id={streak.id}
           key={index}
-          name={streak.name}
           description={streak.description}
           startDate={new Date(streak.startDate)}
           period={streak.period}

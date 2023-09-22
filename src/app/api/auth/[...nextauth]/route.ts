@@ -1,18 +1,13 @@
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
-
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import NextAuth, {
+  type DefaultUser,
+  type NextAuthOptions as NextAuthConfig,
   Session,
   User,
   getServerSession,
-  type DefaultUser,
-  type NextAuthOptions as NextAuthConfig,
 } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
@@ -71,10 +66,7 @@ const config = {
 } satisfies NextAuthConfig;
 
 export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
+  ...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []
 ) {
   return getServerSession(...args, config);
 }

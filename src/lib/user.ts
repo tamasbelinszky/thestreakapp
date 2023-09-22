@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
+
 import { Dynamo } from "./dynamo";
 
 const Users = new Entity(

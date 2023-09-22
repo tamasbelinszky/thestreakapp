@@ -1,15 +1,17 @@
 "use client";
+
 import { deleteStreakById } from "@/lib/streak";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon, ShareIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 interface StreakCardProps {
   id: string;
-  name: string;
+  name?: string;
   description: string;
   startDate: Date;
   period: string;
@@ -18,7 +20,7 @@ interface StreakCardProps {
 
 export const StreakCard: React.FC<StreakCardProps> = ({
   id,
-  name,
+  name = "LinkedIn Post",
   description,
   startDate,
   period,
@@ -81,7 +83,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-sm text-gray-500">
           Started on: {formattedDate}
         </span>

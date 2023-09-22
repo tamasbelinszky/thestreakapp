@@ -1,4 +1,18 @@
 // prettier.config.js
 module.exports = {
-  plugins: ["prettier-plugin-organize-imports", "prettier-plugin-tailwindcss"],
+  printWidth: 120,
+  tabWidth: 2,
+  importOrder: ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  plugins: ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      options: {
+        parser: "typescript",
+        importOrderParserPlugins: ["typescript", "jsx"],
+      },
+    },
+  ],
 };
