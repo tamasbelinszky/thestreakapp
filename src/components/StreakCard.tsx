@@ -6,6 +6,7 @@ import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon, ShareIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 
@@ -52,7 +53,10 @@ export const StreakCard: React.FC<StreakCardProps> = ({
         </div>
         <Popover>
           <PopoverTrigger asChild>
-            <Button className="py- rounded bg-transparent px-2 hover:bg-gray-200 active:bg-gray-300" type="button">
+            <Button
+              className="py- rounded bg-transparent px-2 text-gray-800 hover:bg-gray-200 active:bg-gray-300"
+              type="button"
+            >
               <svg
                 className=" h-4 w-4"
                 fill="none"
@@ -72,10 +76,13 @@ export const StreakCard: React.FC<StreakCardProps> = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-40">
-            <button className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300">
+            <Link
+              href={`/streak/${id}`}
+              className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300"
+            >
               <EditIcon />
               <span className="text-sm font-medium">Edit</span>
-            </button>
+            </Link>
             <button className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300">
               <ShareIcon />
               <span className="text-sm font-medium">Share</span>

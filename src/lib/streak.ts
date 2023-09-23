@@ -136,6 +136,10 @@ export const createStreak = async (input: StreakFormInput) => {
   }).go();
 };
 
+export const getStreakById = async (id: string) => {
+  return StreakEntity.get({ id }).go();
+};
+
 export const getStreaksByUserId = async (userId: string) => {
   return StreakEntity.query.byUserId({ userId }).go();
 };
@@ -146,4 +150,16 @@ export const deleteStreakById = async (id: string) => {
 
 export const completeStreakById = async (id: string) => {
   return StreakEntity.patch({ id }).add({ streak: 1 }).set({ isCompleted: true }).go();
+};
+
+export const editStreakById = async (id: string, input: StreakFormInput & { isCompleted: boolean }) => {
+  // TODO: respect types
+  const validatedInput = streakFormSchema.parse(input);
+  return StreakEntity.patch({ id })
+    .set({
+      ...validatedInput,
+      startDate: validatedInput.startDate.getTime(),
+      isCompleted: input.isCompleted,
+    })
+    .go();
 };
