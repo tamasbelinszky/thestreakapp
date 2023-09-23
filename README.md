@@ -32,3 +32,14 @@ notes: AWS scheduler, email channel
 - calendar integration (I don't like it :D )
 - add react query / trpc?
 - add posthog (product analytics)
+
+# Learnings
+
+- external custom domain setup w cloudflare. Can not transfer name servers.
+  - register domain in cloudflare
+  - set as external domain
+  - validate ownership via AWS Certificate Manager (CNAME, non proxied)
+  - deploy stack
+  - after sst created the cloudfront ditribution add its url as value to root (CNAME, not proxied)
+- can not access secrets and parameters from sst/node/construct as it uses top level await and server actions not supporting it. Started to use env params instead.
+- shadcn is cool
