@@ -1,13 +1,8 @@
 import { EditableStreakCard } from "@/components/EditableStreakCard";
-import { getStreakById, getStreaksByUserId } from "@/lib/streak";
-
-export const getData = async (id: string) => {
-  const streak = getStreakById(id);
-  return streak;
-};
+import { getStreakById } from "@/lib/streak";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { data: streak } = await getData(params.id);
+  const { data: streak } = await getStreakById(params.id);
 
   if (!streak) {
     return <div>Streak not found</div>;
