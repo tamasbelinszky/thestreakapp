@@ -26,6 +26,8 @@ export default {
         "NEXTAUTH_URL",
         "GITHUB_ID",
         "GITHUB_SECRET",
+        "NEXT_PUBLIC_POSTHOG_KEY",
+        "NEXT_PUBLIC_POSTHOG_HOST",
       );
 
       // Create the table
@@ -75,6 +77,9 @@ export default {
           NEXTAUTH_URL: app.stage === "production" ? "https://thestreakapp.com" : "http://localhost:3000",
           GITHUB_ID: app.stage === "production" ? process.env.PROD_GITHUB_ID! : process.env.GITHUB_ID!,
           GITHUB_SECRET: app.stage === "production" ? process.env.PROD_GITHUB_SECRET! : process.env.GITHUB_SECRET!,
+          NEXT_PUBLIC_GTM_CONTAINER_ID: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID!,
+          NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY!,
+          NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
         },
         customDomain:
           app.stage === "production"
