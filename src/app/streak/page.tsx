@@ -1,7 +1,8 @@
 import { StreakForm } from "@/components/StreakForm";
 import StreakList from "@/components/StreakList";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Suspense } from "react";
+
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { Suspense } from "react";
 
 export default function Page() {
   return (
@@ -11,9 +12,9 @@ export default function Page() {
           <h1 className="flex text-2xl font-bold">StreakList</h1>
           <StreakForm />
         </div>
-        <Suspense fallback={<Skeleton />}>
-          <StreakList />
-        </Suspense>
+        {/* <Suspense fallback={<Skeleton />}> */}
+        <StreakList />
+        {/* </Suspense> */}
       </div>
     </div>
   );

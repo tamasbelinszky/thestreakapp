@@ -41,3 +41,6 @@ next-env.d.ts
 
 .env
 
+# build output
+.open-next/
+cdk.context.json

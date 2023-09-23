@@ -6,5 +6,5 @@ export * as Dynamo from "./dynamo";
 export const Client = new DynamoDB.DocumentClient();
 export const Service = {
   client: Client,
-  table: Table.table.tableName,
+  table: "hello",
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { StreakFormInput, createStreak } from "@/lib/streak";
+import { StreakFormInput } from "@/lib/streak";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
@@ -52,7 +52,8 @@ export const StreakForm = () => {
 
   const onSubmit = form.handleSubmit(async (data) => {
     startTransition(async () => {
-      await createStreak(data);
+      // TODO: server action is in alpha stage, could not bind table to site
+      // await createStreak(data);
       router.refresh();
       setOpen(false);
       form.reset();

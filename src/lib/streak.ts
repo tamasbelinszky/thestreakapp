@@ -1,8 +1,8 @@
 "use server";
 
-import { auth } from "@/app/api/auth/[...nextauth]/route";
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
+import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import { Dynamo } from "./dynamo";
@@ -126,7 +126,7 @@ const streakFormSchema = z.object({
 export type StreakFormInput = z.infer<typeof streakFormSchema>;
 
 export const createStreak = async (input: StreakFormInput) => {
-  const maybeUser = await auth();
+  const maybeUser = await getServerSession();
   const maybeUserId = maybeUser?.user?.id;
   if (!maybeUserId) {
     throw new Error("Unauthorized");

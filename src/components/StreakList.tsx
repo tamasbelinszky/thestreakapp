@@ -1,5 +1,5 @@
-import { auth } from "@/app/api/auth/[...nextauth]/route";
 import { getStreaksByUserId } from "@/lib/streak";
+import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import { StreakCard } from "./StreakCard";
@@ -22,12 +22,11 @@ const streaksSchema = z.array(streakSchema);
 type Streaks = z.infer<typeof streaksSchema>;
 
 async function getData() {
-  const maybeUser = await auth();
-
+  const maybeUser = await getServerSession();
   const userId = maybeUser?.user?.id;
 
   if (!userId) {
-    throw new Error("User ID not found");
+    return [];
   }
 
   const res = await getStreaksByUserId(userId);

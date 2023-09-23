@@ -11,6 +11,8 @@ import NextAuth, {
 } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
+// import { Table } from "sst/node/table";
+
 declare module "next-auth" {
   interface Session {
     user?: DefaultUser & {
@@ -24,7 +26,7 @@ const awsConfig: DynamoDBClientConfig = {
     accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY as string,
     secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY as string,
   },
-  region: process.env.NEXT_AUTH_AWS_REGION as string,
+  region: process.env.NEXT_AUTH_AWS_REGION ?? "eu-central-1",
 };
 
 const client = DynamoDBDocument.from(new DynamoDB(awsConfig), {
@@ -34,8 +36,6 @@ const client = DynamoDBDocument.from(new DynamoDB(awsConfig), {
     convertClassInstanceToMap: true,
   },
 });
-
-const tableName = process.env.NEXT_PUBLIC_TABLE_NAME as string;
 
 const config = {
   // Configure one or more authentication providers
@@ -47,7 +47,7 @@ const config = {
     // ...add more providers here
   ],
   adapter: DynamoDBAdapter(client, {
-    tableName: tableName,
+    tableName: "hello",
     partitionKey: "pk",
     sortKey: "sk",
     indexName: "gsi1",
@@ -65,11 +65,11 @@ const config = {
   },
 } satisfies NextAuthConfig;
 
-export function auth(
-  ...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []
-) {
-  return getServerSession(...args, config);
-}
+// export function auth(
+//   ...args: [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]] | [NextApiRequest, NextApiResponse] | []
+// ) {
+//   return getServerSession(...args, config);
+// }
 
 const handler = NextAuth(config);
 export { handler as GET, handler as POST };
