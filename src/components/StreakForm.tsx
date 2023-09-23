@@ -64,7 +64,7 @@ export const StreakForm = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={"default"} className="hover:animate-bounce">
+        <Button variant={"default"} className="hover:animate-pulse">
           Create New Streak
         </Button>
       </DialogTrigger>

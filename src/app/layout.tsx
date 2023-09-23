@@ -7,8 +7,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The Streak",
+  title: "The Streak App | Streaks Unleashed!",
   description: "Create streaks and track your progress. How long can you go?",
+  applicationName: "thestreakapp",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

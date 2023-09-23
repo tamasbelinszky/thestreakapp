@@ -1,6 +1,6 @@
 {
-  "name": "thestreak",
-  "description": "The Streak is a simple habit tracker that helps you build good habits.",
+  "name": "thestreakapp",
+  "description": "Create streaks and track your progress. How long can you go?",
   "version": "0.1.0",
   "private": true,
   "scripts": {
