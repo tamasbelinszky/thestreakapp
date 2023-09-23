@@ -1,3 +1,4 @@
+import { CelebrateDialog } from "@/components/CelebrateDialog";
 import { StreakForm } from "@/components/StreakForm";
 import StreakList from "@/components/StreakList";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +14,7 @@ export default function Page() {
         </div>
         <Suspense fallback={<Skeleton />}>
           <StreakList />
+          <CelebrateDialog />
         </Suspense>
       </div>
     </div>
