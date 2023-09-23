@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { getStreaksByUserId } from "@/lib/streak";
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 
 import { StreakCard } from "./StreakCard";

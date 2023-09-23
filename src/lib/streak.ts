@@ -2,9 +2,9 @@
 
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 
+import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 
 const actionTypes = ["linkedInPost"] as const;
@@ -126,7 +126,7 @@ const streakFormSchema = z.object({
 export type StreakFormInput = z.infer<typeof streakFormSchema>;
 
 export const createStreak = async (input: StreakFormInput) => {
-  const maybeUser = await getServerSession();
+  const maybeUser = await auth();
   const maybeUserId = maybeUser?.user?.id;
   if (!maybeUserId) {
     throw new Error("Unauthorized");
