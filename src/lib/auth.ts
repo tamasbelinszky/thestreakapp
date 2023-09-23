@@ -1,3 +1,4 @@
+import { getBaseUrl } from "@/getBaseUrl";
 import { DynamoDBAdapter } from "@auth/dynamodb-adapter";
 import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
@@ -36,7 +37,6 @@ export const nextAuthConfig = {
       clientId: process.env.GITHUB_ID as string,
       clientSecret: process.env.GITHUB_SECRET as string,
     }),
-    // ...add more providers here
   ],
   adapter: DynamoDBAdapter(dynamoDbClient, {
     tableName: process.env.NEXT_PUBLIC_TABLE_NAME as string,
@@ -54,6 +54,7 @@ export const nextAuthConfig = {
       }
       return session;
     },
+    redirect: async (_) => getBaseUrl(),
   },
 } satisfies NextAuthConfig;
 

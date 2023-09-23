@@ -10,17 +10,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center gap-6 lg:gap-24">
       <h1 className="text-3xl font-bold">{data?.user ? `Hello ${data.user.name}! 👋` : "Welcome to thestreak"}</h1>
-      {!data && (
-        <Button
-          onClick={() =>
-            signIn("github", {
-              callbackUrl: "/streak",
-            })
-          }
-        >
-          Sign in with Github
-        </Button>
-      )}
+      {!data && <Button onClick={() => signIn()}>Sign in with Github</Button>}
 
       {data && (
         <div className="flex flex-col gap-8">

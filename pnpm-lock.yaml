@@ -58,6 +58,9 @@ dependencies:
   date-fns:
     specifier: ^2.30.0
     version: 2.30.0
+  dotenv:
+    specifier: ^16.3.1
+    version: 16.3.1
   electrodb:
     specifier: ^2.9.3
     version: 2.9.3(@aws-sdk/client-dynamodb@3.414.0)
@@ -5189,7 +5192,6 @@ packages:
     resolution:
       { integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ== }
     engines: { node: ">=12" }
-    dev: true
 
   /dset@3.1.2:
     resolution:

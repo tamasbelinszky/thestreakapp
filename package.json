@@ -32,6 +32,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.3.1",
     "electrodb": "^2.9.3",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
@@ -50,10 +51,10 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "aws-cdk-lib": "2.95.1",
     "constructs": "10.2.69",
     "prettier": "^3.0.3",
-    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "sst": "^2.25.2"
   },

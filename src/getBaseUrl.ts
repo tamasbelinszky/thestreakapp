@@ -5,9 +5,9 @@ export const getBaseUrl = () => {
     // browser should use relative url
     return "";
   }
-  if (domainName) {
+  if (process.env.NODE_ENV === "production") {
     // SSR
-    return `https://${domainName}`;
+    return `https://thestreakapp.com`;
   }
   return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
 };
