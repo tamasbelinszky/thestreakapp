@@ -6,7 +6,6 @@ import { StreakCard } from "./StreakCard";
 
 const streakSchema = z.object({
   id: z.string(),
-  actionType: z.string(),
   description: z.string(),
   startDate: z.number(),
   period: z.enum(["daily", "weekly", "monthly", "yearly"]),

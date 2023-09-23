@@ -7,8 +7,6 @@ import { z } from "zod";
 import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 
-const actionTypes = ["linkedInPost"] as const;
-const validationTypes = ["manual"] as const;
 const streakPeriods = ["daily", "weekly", "monthly", "yearly"] as const;
 
 const StreakEntity = new Entity(
@@ -29,9 +27,8 @@ const StreakEntity = new Entity(
         type: "string",
         required: true,
       },
-      actionType: {
-        type: actionTypes,
-        default: actionTypes[0],
+      name: {
+        type: "string",
         required: true,
       },
       numberOfTimesPlanned: {
@@ -55,11 +52,6 @@ const StreakEntity = new Entity(
       startDate: {
         type: "number",
         default: () => new Date().getTime(),
-      },
-      validationType: {
-        type: validationTypes,
-        default: validationTypes[0],
-        required: true,
       },
       streak: {
         type: "number",
@@ -101,15 +93,13 @@ const StreakEntity = new Entity(
           composite: [],
         },
       },
-      // You can add more indexes if needed
     },
   },
   Dynamo.Service,
 );
 
 const streakFormSchema = z.object({
-  // TODO: add linkedInPost validation before adding new action types
-  actionType: z.enum(actionTypes).optional(),
+  name: z.string().max(128, { message: "Name must not be longer than 128 characters." }),
   description: z
     .string()
     .max(256, {
@@ -135,7 +125,6 @@ export const createStreak = async (input: StreakFormInput) => {
   const validatedInput = streakFormSchema.parse(input);
   return StreakEntity.put({
     ...validatedInput,
-    actionType: "linkedInPost",
     startDate: validatedInput.startDate.getTime(),
     userId: maybeUserId,
     streak: 0,
@@ -151,7 +140,5 @@ export const deleteStreakById = async (id: string) => {
 };
 
 export const completeStreakById = async (id: string) => {
-  const result = await StreakEntity.patch({ id }).add({ numberOfTimesCompleted: 1 }).go();
-
-  const isStreakCompleted = result.data.numberOfTimesCompleted === result.data.numberOfTimesPlanned;
+  return StreakEntity.patch({ id }).add({ streak: 1 }).go();
 };

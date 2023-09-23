@@ -1,10 +1,10 @@
 "use client";
 
-import { deleteStreakById } from "@/lib/streak";
+import { completeStreakById, deleteStreakById } from "@/lib/streak";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon, ShareIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useTransition } from "react";
 
 import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -26,6 +26,8 @@ export const StreakCard: React.FC<StreakCardProps> = ({
   period,
   streak,
 }) => {
+  const [isPending, startTransition] = useTransition();
+
   const formattedDate = format(startDate, "yyyy.MM.dd");
   const router = useRouter();
 
@@ -72,8 +74,10 @@ export const StreakCard: React.FC<StreakCardProps> = ({
             </button>
             <button
               onClick={async () => {
-                await deleteStreakById(id);
-                router.refresh();
+                startTransition(async () => {
+                  await deleteStreakById(id);
+                  router.refresh();
+                });
               }}
               className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 text-gray-500 hover:bg-gray-200 active:bg-gray-300"
             >
@@ -90,7 +94,17 @@ export const StreakCard: React.FC<StreakCardProps> = ({
           {period.charAt(0).toUpperCase() + period.slice(1)} Streak: {streak}
         </span>
       </div>
-      <Button>Complete</Button>
+      <Button
+        disabled={isPending}
+        onClick={async () => {
+          startTransition(async () => {
+            await completeStreakById(id);
+            router.refresh();
+          });
+        }}
+      >
+        {isPending ? "Loading..." : "Complete"}
+      </Button>
     </div>
   );
 };

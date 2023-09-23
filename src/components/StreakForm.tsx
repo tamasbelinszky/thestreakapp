@@ -27,6 +27,9 @@ const periods = [
 ] as const;
 
 const streakFormSchema = z.object({
+  name: z.string().max(128, {
+    message: "Name must not be longer than 128 characters.",
+  }),
   description: z
     .string()
     .max(256, {
@@ -39,7 +42,6 @@ const streakFormSchema = z.object({
     })
     .optional(),
   period: z.enum(["daily", "weekly", "monthly", "yearly"]),
-  numberOfTimesPlanned: z.number(),
 });
 
 export const StreakForm = () => {
@@ -52,7 +54,6 @@ export const StreakForm = () => {
 
   const onSubmit = form.handleSubmit(async (data) => {
     startTransition(async () => {
-      // TODO: server action is in alpha stage, could not bind table to site
       await createStreak(data);
       router.refresh();
       setOpen(false);
@@ -71,23 +72,14 @@ export const StreakForm = () => {
           <form onSubmit={onSubmit} className="space-y-2 lg:max-w-md">
             <FormField
               control={form.control}
-              name="actionType"
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>The action you take</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <fieldset disabled>
-                      <Input
-                        className="disabled bg-gray-800 text-white"
-                        disabled
-                        {...field}
-                        placeholder="Posting on LinkedIn"
-                      />
-                    </fieldset>
+                    <Input {...field} placeholder="Posting on LinkedIn" />
                   </FormControl>
-                  <FormDescription className="hidden lg:flex">
-                    Only posting on LinkedIn is supported for now.
-                  </FormDescription>
+                  <FormDescription className="hidden lg:flex">The name of the action you take.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -149,31 +141,6 @@ export const StreakForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="numberOfTimesPlanned"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="truncate">Number of times</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="w-[200px]"
-                      type="number"
-                      defaultValue={1}
-                      min={0}
-                      {...form.register("numberOfTimesPlanned", {
-                        valueAsNumber: true,
-                      })}
-                      required
-                    />
-                  </FormControl>
-                  <FormDescription className="hidden lg:flex">
-                    This is the number of times you will do the action in the given period.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
             <FormField
               control={form.control}
               name="period"
