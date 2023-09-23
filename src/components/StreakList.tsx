@@ -1,3 +1,4 @@
+import { auth } from "@/lib/auth";
 import { getStreaksByUserId } from "@/lib/streak";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
@@ -19,14 +20,12 @@ const streakSchema = z.object({
 
 const streaksSchema = z.array(streakSchema);
 
-type Streaks = z.infer<typeof streaksSchema>;
-
 async function getData() {
-  const maybeUser = await getServerSession();
+  const maybeUser = await auth();
   const userId = maybeUser?.user?.id;
 
   if (!userId) {
-    return [];
+    throw new Error("Unauthorized");
   }
 
   const res = await getStreaksByUserId(userId);

@@ -48,6 +48,10 @@ export default {
 
       const site = new NextjsSite(stack, "site", {
         bind: [myTable],
+        environment: {
+          NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
+          NEXT_PUBLIC_TABLE_ARN: myTable.tableArn,
+        },
         customDomain:
           app.stage === "production"
             ? {
@@ -66,6 +70,8 @@ export default {
 
       stack.addOutputs({
         SiteUrl: site.url,
+        tableName: myTable.tableName,
+        tableArn: myTable.tableArn,
       });
     });
   },
