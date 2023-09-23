@@ -57,6 +57,11 @@ const StreakEntity = new Entity(
         type: "number",
         required: true,
       },
+      isCompleted: {
+        type: "boolean",
+        default: false,
+        required: true,
+      },
       createdAt: {
         type: "string",
         readOnly: true,
@@ -140,5 +145,5 @@ export const deleteStreakById = async (id: string) => {
 };
 
 export const completeStreakById = async (id: string) => {
-  return StreakEntity.patch({ id }).add({ streak: 1 }).go();
+  return StreakEntity.patch({ id }).add({ streak: 1 }).set({ isCompleted: true }).go();
 };
