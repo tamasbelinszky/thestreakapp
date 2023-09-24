@@ -14,10 +14,8 @@ export default function Page() {
             <Image className="hidden lg:block" src={"/icon.png"} width={64} height={64} alt="thestreakapp_icon" />
             TheStreakApp
           </Link>
-
           <StreakForm />
         </div>
-
         <Suspense fallback={<Skeleton />}>
           <StreakList />
         </Suspense>

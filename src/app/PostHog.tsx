@@ -5,12 +5,11 @@ import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
 
-// app/providers.tsx
-
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST as string,
-    capture_pageview: false, // Disable automatic pageview capture, as we capture manually
+    // Disable automatic pageview capture, as we capture manually
+    capture_pageview: false,
   });
 }
 
