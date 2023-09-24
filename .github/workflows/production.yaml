@@ -19,21 +19,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version: "16"
+
+      - name: "Create env file"
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Install dependencies
         run: pnpm
 
       - name: Set secrets
         run: |
-          npx sst secrets set NEXT_AUTH_AWS_ACCESS_KEY "${{ secrets.NEXT_AUTH_AWS_ACCESS_KEY }}" --stage production
-          npx sst secrets set NEXT_AUTH_AWS_SECRET_KEY "${{ secrets.NEXT_AUTH_AWS_SECRET_KEY }}" --stage production
-          npx sst secrets set NEXT_AUTH_AWS_REGION "${{ secrets.NEXT_AUTH_AWS_REGION }}" --stage production
-          npx sst secrets set NEXT_AUTH_SECRET "${{ secrets.NEXT_AUTH_SECRET }}" --stage production
-          npx sst secrets set GITHUB_ID "${{ secrets.GITHUB_ID }}" --stage production
-          npx sst secrets set GITHUB_SECRET "${{ secrets.GITHUB_SECRET }}" --stage production
+          npx sst secrets load .env --stage production
 
       - name: Deploy stack
         run: pnpm deploy --stage production
