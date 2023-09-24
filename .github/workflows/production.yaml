@@ -12,11 +12,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.16.0
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -24,9 +19,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
-      - name: "Create env file"
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.0
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -36,6 +32,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm
+
+      - name: "Create env file"
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Set secrets
         run: |
