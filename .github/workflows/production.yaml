@@ -8,9 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -25,6 +22,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8.7.6
+          run_install: false
 
       - name: "Create env file"
         run: |
