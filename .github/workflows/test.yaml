@@ -7,7 +7,6 @@ on:
 
 jobs:
   test:
-    # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
 
     steps:

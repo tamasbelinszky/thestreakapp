@@ -3,8 +3,17 @@ import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import dotenv from "dotenv";
 import { SSTConfig } from "sst";
 import { Config, NextjsSite, Table } from "sst/constructs";
+import { z } from "zod";
 
 dotenv.config();
+
+const envSchema = z.object({
+  NEXTAUTH_URL: z.string().default("http://localhost:3000"),
+  NEXT_PUBLIC_GTM_CONTAINER_ID: z.string(),
+  NEXT_PUBLIC_POSTHOG_KEY: z.string(),
+  NEXT_PUBLIC_POSTHOG_HOST: z.string(),
+  NEXT_AUTH_AWS_ACCESS_KEY: z.string(),
+});
 
 export default {
   config(_input) {
@@ -15,19 +24,19 @@ export default {
   },
   stacks(app) {
     app.stack(function Site({ stack }) {
-      const randomEnv = process.env.NEXTAUTH_URL;
-      if (!randomEnv) throw new Error("NEXTAUTH_URL is not set");
-      const config = Config.Secret.create(
+      const env = envSchema.parse(process.env);
+      if (app.stage !== "production") {
+        app.setDefaultRemovalPolicy(RemovalPolicy.DESTROY);
+      }
+
+      const secretParams = Config.Secret.create(
         stack,
         "NEXT_AUTH_AWS_ACCESS_KEY",
         "NEXT_AUTH_AWS_SECRET_KEY",
         "NEXT_AUTH_AWS_REGION",
         "NEXT_AUTH_SECRET",
-        "NEXTAUTH_URL",
         "GITHUB_ID",
         "GITHUB_SECRET",
-        "NEXT_PUBLIC_POSTHOG_KEY",
-        "NEXT_PUBLIC_POSTHOG_HOST",
       );
 
       // Create the table
@@ -55,31 +64,15 @@ export default {
           },
         },
         timeToLiveAttribute: "expires",
-        cdk: {
-          table: {
-            // TODO: add back when deployed to prod
-            // removalPolicy: app.stage !== "production" ? RemovalPolicy.DESTROY : RemovalPolicy.RETAIN,
-            removalPolicy: RemovalPolicy.DESTROY,
-          },
-        },
       });
 
       const site = new NextjsSite(stack, "site", {
-        bind: [myTable],
+        bind: [myTable, ...Object.values(secretParams)],
         environment: {
           // Sst config uses top level await, next js server actions currently does not support this ( same for middleware).
+          // This is why we need to pass NEXT_PUBLIC_TABLE_NAME to the db client as an env variable.
           NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
-          NEXT_PUBLIC_TABLE_ARN: myTable.tableArn,
-          NEXT_AUTH_AWS_ACCESS_KEY: process.env.NEXT_AUTH_AWS_ACCESS_KEY as string,
-          NEXT_AUTH_AWS_SECRET_KEY: process.env.NEXT_AUTH_AWS_SECRET_KEY as string,
-          NEXT_AUTH_AWS_REGION: process.env.NEXT_AUTH_AWS_REGION as string,
-          NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET as string,
-          NEXTAUTH_URL: app.stage === "production" ? "https://thestreakapp.com" : "http://localhost:3000",
-          GITHUB_ID: app.stage === "production" ? process.env.PROD_GITHUB_ID! : process.env.GITHUB_ID!,
-          GITHUB_SECRET: app.stage === "production" ? process.env.PROD_GITHUB_SECRET! : process.env.GITHUB_SECRET!,
-          NEXT_PUBLIC_GTM_CONTAINER_ID: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID!,
-          NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY!,
-          NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
+          ...env,
         },
         customDomain:
           app.stage === "production"

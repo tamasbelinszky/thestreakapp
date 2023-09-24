@@ -5,6 +5,8 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import { type DefaultUser, type NextAuthOptions as NextAuthConfig, Session, User, getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import { Config } from "sst/node/config";
+import { Table } from "sst/node/table";
 
 declare module "next-auth" {
   interface Session {
@@ -16,10 +18,10 @@ declare module "next-auth" {
 
 const awsConfig: DynamoDBClientConfig = {
   credentials: {
-    accessKeyId: process.env.NEXT_AUTH_AWS_ACCESS_KEY as string,
-    secretAccessKey: process.env.NEXT_AUTH_AWS_SECRET_KEY as string,
+    accessKeyId: Config.NEXT_AUTH_AWS_ACCESS_KEY,
+    secretAccessKey: Config.NEXT_AUTH_AWS_SECRET_KEY as string,
   },
-  region: process.env.NEXT_AUTH_AWS_REGION ?? "eu-central-1",
+  region: Config.NEXT_AUTH_AWS_REGION,
 };
 
 const dynamoDbClient = DynamoDBDocument.from(new DynamoDB(awsConfig), {
@@ -34,19 +36,19 @@ export const nextAuthConfig = {
   // Configure one or more authentication providers
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientId: Config.GITHUB_ID,
+      clientSecret: Config.GITHUB_SECRET,
     }),
   ],
   adapter: DynamoDBAdapter(dynamoDbClient, {
-    tableName: process.env.NEXT_PUBLIC_TABLE_NAME as string,
+    tableName: Table.table.tableName,
     partitionKey: "pk",
     sortKey: "sk",
     indexName: "gsi1",
     indexPartitionKey: "gsi1pk",
     indexSortKey: "gsi1sk",
   }),
-  secret: process.env.NEXT_AUTH_SECRET as string,
+  secret: Config.NEXT_AUTH_SECRET,
   callbacks: {
     session: async ({ session, user }: { session: Session; user: User }) => {
       if (session?.user) {
