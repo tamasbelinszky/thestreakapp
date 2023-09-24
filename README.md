@@ -2,8 +2,7 @@
 
 [thestreakapp.com](https://thestreakapp.com/)
 
-![](https://github.com/tamasbelinszky/thestreakapp/blob/main/public/demo_streak.gif)
-
+![demo_streak](https://github.com/tamasbelinszky/thestreakapp/assets/31423611/d96395fc-24da-41b1-9dc2-110de61eb117)
 
 ## Tech log and learnings
 
