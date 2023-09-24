@@ -13,6 +13,20 @@ export const metadata: Metadata = {
   title: "The Streak App | Streaks Unleashed!",
   description: "Create streaks and track your progress. How long can you go?",
   applicationName: "thestreakapp",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://thestreakapp.com",
+    description: "Create streaks and track your progress. How long can you go?",
+    images: [
+      {
+        url: "https://thestreakapp.com/opengraph-image.png",
+        width: 1000,
+        height: 550,
+        alt: "thestreakapp_logo",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
