@@ -33,6 +33,7 @@ const StreakEntity = new Entity(
       },
       description: {
         type: "string",
+        default: "",
       },
       period: {
         type: streakPeriods,
@@ -117,7 +118,11 @@ export const createStreak = async (input: StreakFormInput) => {
     throw new Error("Unauthorized");
   }
 
-  const validatedInput = streakFormSchema.parse(input);
+  const validatedInput = streakFormSchema.parse({
+    ...input,
+    isCompleted: false,
+  });
+
   return StreakEntity.put({
     ...validatedInput,
     startDate: validatedInput.startDate.getTime(),
