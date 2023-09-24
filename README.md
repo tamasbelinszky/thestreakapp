@@ -1,34 +1,49 @@
+## Tech log and learnings
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+SST was initialized in the project root using [https://docs.sst.dev/start/nextjs](https://docs.sst.dev/start/nextjs).
 
-First, run the development server:
+Next Auth has been implemented with the Github Provider and the DynamoDB adapter. The session object has been extended to include `userId`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Wasn't aware of `NEXT_AUTH_URL`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[shadcn](https://ui.shadcn.com/) configuration and components have been added.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[ElectroDB](https://electrodb.dev/en/core-concepts/introduction/) configuration was incorporated, and the first entity was created with plans to adopt a single table design.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+A new domain was registered on [Cloudflare](https://www.cloudflare.com/) and pointed to the deployed [Cloudfront](https://aws.amazon.com/cloudfront/) distribution URL.
 
-## Learn More
+- Tried to set up a new hosted zone in Route 53 but it is not possible to change name servers on a newly registered domain on Cloudflare.
+- When we set up a custom domain for a site with SST, we need to validate ownership via AWS Certificate Manager manually for the first time.
 
-To learn more about Next.js, take a look at the following resources:
+GitHub Actions were set up for a basic CI/CD workflow.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js server action can not handle top level await which is used by SST's Config constructs, this is why we need to pass secrets and parameters to those functions as environment variables.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Integration with [Posthog](https://posthog.com/) and [Google Tag Manager](https://tagmanager.google.com/) was completed to analyze, test, observe, and deploy new features.
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Create streaks
+- View streaks
+- Increase streak counts
+- Celebrate upon completion
+- Analytics tools: GTM, Posthog
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Todos
+
+- Scheduler: Evaluate and reopen streaks for the specified period
+- Automated validations (e.g., posting once a week to LinkedIn, scraping LinkedIn or obtaining LinkedIn access token for validation)
+- Authentication middleware
+- Layouts for both authorized and unauthorized users, including landing pages
+
+### Ideas
+
+- Conversational AI trained to assist with maintaining focus, setting, and achieving goals
+- Community suggestions leading to a wall of posts
+- Community building through newsletters, Discord, etc.
+- Calendar integration
+- Notifications using React Email, AWS SES, or SendGrid
+- Blog focusing on the science behind setting and achieving goals
+- App integrations, e.g., [Push](https://apps.apple.com/us/app/push-workout-build-muscle/id1621689462)
