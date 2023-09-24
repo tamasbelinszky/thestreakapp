@@ -39,7 +39,6 @@ export default {
         "GITHUB_SECRET",
       );
 
-      // Create the table
       const myTable = new Table(stack, "table", {
         fields: {
           pk: "string",
