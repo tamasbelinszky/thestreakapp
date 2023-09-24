@@ -1,3 +1,9 @@
+# Demo
+
+[thestreakapp.com](https://thestreakapp.com/)
+
+![demo_streak](https://github.com/tamasbelinszky/thestreakapp/assets/31423611/d96395fc-24da-41b1-9dc2-110de61eb117)
+
 ## Tech log and learnings
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
@@ -6,7 +12,7 @@ SST was initialized in the project root using [https://docs.sst.dev/start/nextjs
 
 Next Auth has been implemented with the Github Provider and the DynamoDB adapter. The session object has been extended to include `userId`.
 
-- Wasn't aware of `NEXT_AUTH_URL`.
+- Wasn't aware of `NEXTAUTH_URL`.
 
 [shadcn](https://ui.shadcn.com/) configuration and components have been added.
 
