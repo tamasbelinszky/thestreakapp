@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "Chat With Andrew Huberman about goals",
+  title: "Chat with an AI your about goals",
   description:
-    "The science of goal setting with Andrew Huberman. Set and achieve your goals with the help of a professional.",
+    "The science of goal setting with an AI chatbot. Set and achieve your goals with the help of a professional.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
