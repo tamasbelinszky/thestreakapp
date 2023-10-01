@@ -9,7 +9,7 @@ const streakSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   startDate: z.number(),
-  period: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  period: z.enum(["daily", "weekly"]),
   streak: z.number(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),

@@ -6,8 +6,11 @@ import { z } from "zod";
 
 import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
+import { createOrUpdateStreakSchedule, deleteStreakSchedule } from "./scheduler";
 
-const streakPeriods = ["daily", "weekly", "monthly", "yearly"] as const;
+const streakPeriods = ["daily", "weekly"] as const;
+
+export type StreakPeriod = (typeof streakPeriods)[number];
 
 const StreakEntity = new Entity(
   {
@@ -105,8 +108,9 @@ const streakFormSchema = z.object({
   startDate: z.date({
     required_error: "A start date is required to count the streak.",
   }),
-  period: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  period: z.enum(["daily", "weekly"]),
   isCompleted: z.boolean(),
+  streak: z.number().optional(),
 });
 
 export type StreakFormInput = z.infer<typeof streakFormSchema>;
@@ -123,12 +127,19 @@ export const createStreak = async (input: StreakFormInput) => {
     isCompleted: false,
   });
 
-  return StreakEntity.put({
+  const result = await StreakEntity.put({
     ...validatedInput,
     startDate: validatedInput.startDate.getTime(),
     userId: maybeUserId,
     streak: 0,
   }).go();
+
+  await createOrUpdateStreakSchedule({
+    userId: maybeUserId,
+    streakId: result.data.id,
+    streakPeriod: validatedInput.period,
+    startTime: validatedInput.startDate.getTime(),
+  });
 };
 
 export const getStreakById = async (id: string) => {
@@ -140,6 +151,8 @@ export const getStreaksByUserId = async (userId: string) => {
 };
 
 export const deleteStreakById = async (id: string) => {
+  // TODO: transaction
+  await deleteStreakSchedule(id);
   return StreakEntity.delete({ id }).go();
 };
 
@@ -155,4 +168,12 @@ export const editStreakById = async (id: string, input: StreakFormInput) => {
       startDate: validatedInput.startDate.getTime(),
     })
     .go();
+};
+
+export const evaluateStreak = async (streakId: string, isCompleted: boolean) => {
+  if (!isCompleted) {
+    await StreakEntity.patch({ id: streakId }).set({ streak: 0 }).go();
+  }
+
+  await StreakEntity.patch({ id: streakId }).set({ isCompleted: false }).go();
 };

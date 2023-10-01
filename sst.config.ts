@@ -1,8 +1,10 @@
 import { RemovalPolicy } from "aws-cdk-lib";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
-import dotenv from "dotenv";
+import { PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import iam from "aws-cdk-lib/aws-iam";
+import dotenv, { config } from "dotenv";
 import { SSTConfig } from "sst";
-import { Config, NextjsSite, Table } from "sst/constructs";
+import { Config, Function, NextjsSite, Table } from "sst/constructs";
 import { z } from "zod";
 
 dotenv.config();
@@ -65,14 +67,42 @@ export default {
         timeToLiveAttribute: "expires",
       });
 
+      const streakValuatorFunction = new Function(stack, `streakValuatorFunction-${app.stage}`, {
+        handler: "packages/functions/src/events/streak-valuator.handler",
+        bind: [myTable, ...Object.values(secretParams)],
+      });
+
+      const streakValuatorFunctionRole = new Role(stack, `streakValuatorFunctionRole-${app.stage}`, {
+        assumedBy: new ServicePrincipal("scheduler.amazonaws.com"),
+        inlinePolicies: {
+          lambdaExecute: new PolicyDocument({
+            statements: [
+              new PolicyStatement({
+                actions: ["lambda:InvokeFunction"],
+                resources: ["*"],
+              }),
+            ],
+          }),
+        },
+      });
+
       const site = new NextjsSite(stack, "site", {
         bind: [myTable, ...Object.values(secretParams)],
         environment: {
           // Sst config uses top level await, next js server actions currently does not support this ( same for middleware).
           // This is why we need to pass NEXT_PUBLIC_TABLE_NAME to the db client as an env variable.
           NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
+          STREAK_VALUATOR_FUNCTION_ARN: streakValuatorFunction.functionArn,
+          STREAK_VALUATOR_FUNCTION_ROLE_ARN: streakValuatorFunctionRole.roleArn,
           ...env,
         },
+        permissions: [
+          new iam.PolicyStatement({
+            actions: ["scheduler:*", "iam:PassRole"],
+            effect: iam.Effect.ALLOW,
+            resources: ["*"],
+          }),
+        ],
         customDomain:
           app.stage === "production"
             ? {
@@ -93,6 +123,8 @@ export default {
         SiteUrl: site.url,
         tableName: myTable.tableName,
         tableArn: myTable.tableArn,
+        streakValuatorFunctionArn: streakValuatorFunction.functionArn,
+        streakValuatorFunctionRoleArn: streakValuatorFunctionRole.roleArn,
       });
     });
   },

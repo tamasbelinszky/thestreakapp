@@ -24,8 +24,6 @@ import { Textarea } from "./ui/textarea";
 const periods = [
   { label: "Daily", value: "daily" },
   { label: "Weekly", value: "weekly" },
-  { label: "Monthly", value: "monthly" },
-  { label: "Yearly", value: "yearly" },
 ] as const;
 
 const streakFormSchema = z.object({
@@ -43,7 +41,7 @@ const streakFormSchema = z.object({
       required_error: "A start date is required to count the streak.",
     })
     .optional(),
-  period: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  period: z.enum(["daily", "weekly"]),
   isCompleted: z.boolean(),
 });
 
