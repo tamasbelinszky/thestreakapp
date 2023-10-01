@@ -29,6 +29,12 @@ GitHub Actions were set up for a basic CI/CD workflow.
 
 Integration with [Posthog](https://posthog.com/) and [Google Tag Manager](https://tagmanager.google.com/) was completed to analyze, test, observe, and deploy new features.
 
+Added daily and weekly schedulers.
+
+- I became confused about monthly and yearly schedules; they might mean different things to different users and vary based on streaks.
+
+Added an "ai" library with OpenAI for initial chat functionality.
+
 ## Features
 
 - Create streaks
