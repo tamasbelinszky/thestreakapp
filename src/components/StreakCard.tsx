@@ -2,10 +2,9 @@
 
 import { useConfetti } from "@/hooks/useConfetti";
 import { completeStreakById, deleteStreakById } from "@/lib/streak";
-import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { format } from "date-fns";
-import { DeleteIcon, EditIcon, ShareIcon } from "lucide-react";
+import { DeleteIcon, EditIcon, MessageCircleIcon, ShareIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
@@ -76,6 +75,13 @@ export const StreakCard: React.FC<StreakCardProps> = ({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-40">
+            <Link
+              href={`/chat/${id}`}
+              className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300"
+            >
+              <MessageCircleIcon />
+              <span className="text-sm font-medium">Chat</span>
+            </Link>
             <Link
               href={`/streak/${id}`}
               className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300"

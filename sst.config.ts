@@ -15,6 +15,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_POSTHOG_KEY: z.string(),
   NEXT_PUBLIC_POSTHOG_HOST: z.string(),
   NEXT_AUTH_AWS_ACCESS_KEY: z.string(),
+  OPENAI_API_KEY: z.string(),
 });
 
 export default {
