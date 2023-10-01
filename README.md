@@ -29,6 +29,12 @@ GitHub Actions were set up for a basic CI/CD workflow.
 
 Integration with [Posthog](https://posthog.com/) and [Google Tag Manager](https://tagmanager.google.com/) was completed to analyze, test, observe, and deploy new features.
 
+Added daily and weekly schedulers.
+
+- I became confused about monthly and yearly schedules; they might mean different things to different users and vary based on streaks.
+
+Added an "ai" library with OpenAI for initial chat functionality.
+
 ## Features
 
 - Create streaks
@@ -36,17 +42,17 @@ Integration with [Posthog](https://posthog.com/) and [Google Tag Manager](https:
 - Increase streak counts
 - Celebrate upon completion
 - Analytics tools: GTM, Posthog
+- Scheduler: Evaluate and reopen streaks for the specified period
+- Conversational AI trained to assist with maintaining focus, setting, and achieving goals
 
 ## Todos
 
-- Scheduler: Evaluate and reopen streaks for the specified period
 - Automated validations (e.g., posting once a week to LinkedIn, scraping LinkedIn or obtaining LinkedIn access token for validation)
 - Authentication middleware
 - Layouts for both authorized and unauthorized users, including landing pages
 
 ### Ideas
 
-- Conversational AI trained to assist with maintaining focus, setting, and achieving goals
 - Community suggestions leading to a wall of posts
 - Community building through newsletters, Discord, etc.
 - Calendar integration

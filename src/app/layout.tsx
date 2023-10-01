@@ -52,7 +52,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               className="invisible hidden"
             ></iframe>
           </noscript>
-          <main className="flex min-h-screen w-full flex-col p-4 lg:p-8">
+          <main className="flex h-screen w-full flex-col p-4 lg:p-8">
             <AuthContext>{children}</AuthContext>
           </main>
         </body>
