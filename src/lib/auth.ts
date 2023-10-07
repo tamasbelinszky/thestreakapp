@@ -4,6 +4,7 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
 import { type DefaultUser, type NextAuthOptions as NextAuthConfig, Session, User, getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { Config } from "sst/node/config";
 import { Table } from "sst/node/table";
 
@@ -37,6 +38,10 @@ export const nextAuthConfig = {
     GithubProvider({
       clientId: Config.GITHUB_ID,
       clientSecret: Config.GITHUB_SECRET,
+    }),
+    GoogleProvider({
+      clientId: Config.GOOGLE_CLIENT_ID,
+      clientSecret: Config.GOOGLE_CLIENT_SECRET,
     }),
   ],
   adapter: DynamoDBAdapter(dynamoDbClient, {
