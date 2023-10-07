@@ -40,7 +40,6 @@ export const Chat = (props: { initialMessages: Message[] }) => {
           <div className="flex flex-col">
             <form
               onSubmit={(data) => {
-                console.log("wtf", { data });
                 return handleSubmit(data);
               }}
             >
