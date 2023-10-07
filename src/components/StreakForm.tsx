@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Switch } from "./ui/switch";
 import { Textarea } from "./ui/textarea";
 
 const periods = [
@@ -34,12 +35,11 @@ const streakFormSchema = z.object({
       message: "Description must not be longer than 256 characters.",
     })
     .optional(),
-  startDate: z
-    .any({
-      required_error: "A start date is required to count the streak.",
-    })
-    .optional(),
+  startDate: z.date({
+    required_error: "A start date is required to count the streak.",
+  }),
   period: z.enum(["daily", "weekly"]),
+  autoComplete: z.boolean(),
 });
 
 export const StreakForm = () => {
@@ -48,6 +48,10 @@ export const StreakForm = () => {
   const router = useRouter();
   const form = useForm<StreakFormInput>({
     resolver: zodResolver(streakFormSchema),
+    defaultValues: {
+      period: "daily",
+      autoComplete: true,
+    },
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
@@ -192,6 +196,24 @@ export const StreakForm = () => {
                     This is the period that will increase your streak.
                   </FormDescription>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="autoComplete"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-secondary p-3 shadow-sm">
+                  <div className="space-y-0.5">
+                    <FormLabel>Auto Complete</FormLabel>
+                    <FormDescription>
+                      If enabled, the streak will automatically increase once the period ends. You only need to take
+                      action if you lose the streak.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
                 </FormItem>
               )}
             />

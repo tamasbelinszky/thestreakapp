@@ -56,6 +56,11 @@ const StreakEntity = new Entity(
         default: false,
         required: true,
       },
+      autoComplete: {
+        type: "boolean",
+        default: false,
+        required: true,
+      },
       createdAt: {
         type: "string",
         readOnly: true,
@@ -110,6 +115,7 @@ const streakFormSchema = z.object({
   }),
   period: z.enum(["daily", "weekly"]),
   isCompleted: z.boolean(),
+  autoComplete: z.boolean().default(false),
   streak: z.number().optional(),
 });
 
