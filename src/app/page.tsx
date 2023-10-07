@@ -4,6 +4,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
 
 export default function Home() {
   const { data } = useSession();
@@ -12,7 +13,12 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center gap-6 lg:gap-24">
       <Image src={"/icon.png"} width={64} height={64} alt="thestreakapp_icon" className="hover:animate-spin" />
       <h1 className="text-3xl font-bold">{data?.user ? `Hello ${data.user.name}! 👋` : "Welcome to thestreak"}</h1>
-      {!data && <Button onClick={() => signIn("github")}>Sign in with Github</Button>}
+      {!data && (
+        <Fragment>
+          <Button onClick={() => signIn("github")}>Sign in with Github</Button>
+          <Button onClick={() => signIn("google")}>Sign in with Google</Button>
+        </Fragment>
+      )}
 
       {data && (
         <div className="flex flex-col gap-8">

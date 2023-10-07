@@ -40,6 +40,8 @@ export default {
         "NEXT_AUTH_SECRET",
         "GITHUB_ID",
         "GITHUB_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
       );
 
       const myTable = new Table(stack, "table", {
