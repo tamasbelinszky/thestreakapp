@@ -10,6 +10,7 @@ import { Config } from "sst/node/config";
 import { Table } from "sst/node/table";
 
 declare module "next-auth" {
+  // eslint-disable-next-line no-unused-vars
   interface Session {
     user?: DefaultUser & {
       id: string;

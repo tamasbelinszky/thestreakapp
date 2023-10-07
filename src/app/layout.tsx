@@ -1,4 +1,4 @@
-import { NavigationMenuItems, NavigationSheetMenu } from "@/components/NavigationMenu";
+import { NavigationSheetMenu } from "@/components/NavigationMenu";
 import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";

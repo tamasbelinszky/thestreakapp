@@ -1,7 +1,7 @@
 "use client";
 
 import ChatMessage from "@/components/chat/ChatMessage";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Message, useChat } from "ai/react";
 import { SendIcon } from "lucide-react";
