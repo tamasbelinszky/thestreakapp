@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <div className="flex h-screen w-full justify-center">{children}</div>;
+  return <div className="flex h-screen w-full justify-center py-2">{children}</div>;
 }
