@@ -1,6 +1,6 @@
 "use client";
 
-import { StreakFormInput, createStreak, editStreakById } from "@/lib/streak";
+import { StreakFormInput, editStreakById } from "@/lib/streak";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";

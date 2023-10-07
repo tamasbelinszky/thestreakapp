@@ -3,8 +3,8 @@ import { Entity } from "electrodb";
 
 import { Dynamo } from "./dynamo";
 
+// eslint-disable-next-line no-unused-vars
 const Users = new Entity(
-  // not used
   {
     model: {
       entity: "user",

@@ -1,3 +1,5 @@
+import { NavigationSheetMenu } from "@/components/NavigationMenu";
+import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -43,7 +45,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <PostHogPageview />
       </Suspense>
       <PHProvider>
-        <body className={inter.className}>
+        <body className={clsx(inter.className, "realtive")}>
+          <nav className="fixed left-0 right-0 top-0 z-50 flex h-12 items-center justify-center bg-secondary px-4 shadow-sm md:max-w-sm md:justify-start md:bg-white md:shadow-none lg:px-8">
+            <NavigationSheetMenu />
+          </nav>
           <noscript>
             <iframe
               src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_CONTAINER_ID}`}

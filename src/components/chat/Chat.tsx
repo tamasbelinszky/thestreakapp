@@ -1,11 +1,10 @@
 "use client";
 
 import ChatMessage from "@/components/chat/ChatMessage";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Message, useChat } from "ai/react";
-import { ArrowLeftIcon, SendIcon } from "lucide-react";
-import Link from "next/link";
+import { SendIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 export const Chat = (props: { initialMessages: Message[] }) => {
@@ -25,13 +24,9 @@ export const Chat = (props: { initialMessages: Message[] }) => {
 
   return (
     <>
-      <Link href={"/streak"} className={buttonVariants({ size: "sm", variant: "ghost" })}>
-        <ArrowLeftIcon />
-        Back
-      </Link>
-      <div className="flex w-full flex-col rounded-xl border p-2 lg:max-w-4xl lg:p-4">
+      <div className="flex w-full flex-col p-2 lg:max-w-4xl lg:p-4">
         <div className="flex-grow">
-          <div className="flex h-full w-full flex-col justify-end gap-2 space-y-2 overflow-y-auto p-4">
+          <div className="flex h-full w-full flex-col justify-end gap-2 space-y-2 overflow-y-auto">
             {messages
               .filter((e) => e.role !== "system")
               .map((message, index) => (
@@ -49,9 +44,13 @@ export const Chat = (props: { initialMessages: Message[] }) => {
                 return handleSubmit(data);
               }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 p-2">
                 <Input value={input} placeholder="Say something..." onChange={handleInputChange} />
-                <Button type="submit" className={"flex gap-2 rounded-lg bg-primary text-white "} disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className={"flex gap-2 rounded-lg bg-primary p-2 text-white"}
+                  disabled={isLoading}
+                >
                   {isLoading ? "Loading..." : "Send"}
                   <SendIcon />
                 </Button>

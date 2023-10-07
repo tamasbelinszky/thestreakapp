@@ -35,6 +35,12 @@ Added daily and weekly schedulers.
 
 Added an "ai" library with OpenAI for initial chat functionality.
 
+Added option for Google OAuth login.
+
+Added [Lumigo](https://platform.lumigo.io/project/c_8631a903f9c94/dashboard) for full observability of AWS production workloads
+
+Opted for experimental streaming mode with SST v2.28.0 for the Next.js site, increased timeout to the max 30sec.
+
 ## Features
 
 - Create streaks
@@ -44,6 +50,7 @@ Added an "ai" library with OpenAI for initial chat functionality.
 - Analytics tools: GTM, Posthog
 - Scheduler: Evaluate and reopen streaks for the specified period
 - Conversational AI trained to assist with maintaining focus, setting, and achieving goals
+- Auto-complete streak: an option for users to set streaks that automatically increase per period.
 
 ## Todos
 
