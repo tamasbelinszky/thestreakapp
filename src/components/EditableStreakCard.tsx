@@ -43,6 +43,7 @@ const streakFormSchema = z.object({
     .optional(),
   period: z.enum(["daily", "weekly"]),
   isCompleted: z.boolean(),
+  autoComplete: z.boolean(),
 });
 
 export const EditableStreakCard: React.FC<z.infer<typeof streakFormSchema> & { isCompleted: boolean; id: string }> = (
@@ -202,6 +203,24 @@ export const EditableStreakCard: React.FC<z.infer<typeof streakFormSchema> & { i
                   This is the period that will increase your streak.
                 </FormDescription>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="autoComplete"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-secondary p-3 shadow-sm">
+                <div className="space-y-0.5">
+                  <FormLabel>Auto Complete</FormLabel>
+                  <FormDescription>
+                    If enabled, the streak will automatically increase once the period ends. You only need to take
+                    action if you lose the streak.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} defaultChecked={props.autoComplete} />
+                </FormControl>
               </FormItem>
             )}
           />

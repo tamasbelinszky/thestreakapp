@@ -15,6 +15,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       startDate={new Date(streak.startDate as number)}
       period={streak.period}
       isCompleted={streak.isCompleted}
+      autoComplete={streak.autoComplete}
       id={streak.id}
       key={streak.id}
     />
