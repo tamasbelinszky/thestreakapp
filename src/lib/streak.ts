@@ -176,9 +176,13 @@ export const editStreakById = async (id: string, input: StreakFormInput) => {
     .go();
 };
 
-export const evaluateStreak = async (streakId: string, isCompleted: boolean) => {
-  if (!isCompleted) {
+export const evaluateStreak = async (streakId: string, isCompleted: boolean, autoComplete: boolean) => {
+  if (!isCompleted && !autoComplete) {
     await StreakEntity.patch({ id: streakId }).set({ streak: 0 }).go();
+  }
+
+  if (isCompleted && autoComplete) {
+    await StreakEntity.patch({ id: streakId }).add({ streak: 1 }).go();
   }
 
   await StreakEntity.patch({ id: streakId }).set({ isCompleted: false }).go();

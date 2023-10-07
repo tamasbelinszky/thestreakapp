@@ -35,6 +35,11 @@ const StreakEventEntity = new Entity(
         default: false,
         required: true,
       },
+      autoComplete: {
+        type: "boolean",
+        default: false,
+        required: true,
+      },
       currentStreak: {
         type: "number",
         required: true,
@@ -96,15 +101,9 @@ export const putStreakEvent = async (input: {
   streakId: string;
   isCompleted: boolean;
   currentStreak: number;
+  autoComplete: boolean;
 }) => {
-  const { userId, streakId, isCompleted, currentStreak } = input;
-
-  const streakEvent = await StreakEventEntity.put({
-    userId,
-    streakId,
-    isCompleted,
-    currentStreak,
-  }).go();
+  const streakEvent = await StreakEventEntity.put(input).go();
 
   return streakEvent;
 };

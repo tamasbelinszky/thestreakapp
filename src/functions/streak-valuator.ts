@@ -20,12 +20,13 @@ export const handler: Handler<Event> = async (event) => {
   }
 
   // TODO: transaction
-  await evaluateStreak(streakId, streak.data.isCompleted);
+  await evaluateStreak(streakId, streak.data.isCompleted, streak.data.autoComplete);
   await putStreakEvent({
     userId,
     streakId,
     isCompleted: streak.data.isCompleted,
     currentStreak: streak.data.streak,
+    autoComplete: streak.data.autoComplete,
   });
 
   return {
