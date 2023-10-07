@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { openai } from "@/lib/opanai";
+import { openai } from "@/lib/openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextRequest } from "next/server";
 
@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
     model: "gpt-4",
     stream: true,
     messages,
+    max_tokens: 250,
   });
   const stream = OpenAIStream(response);
   return new StreamingTextResponse(stream);
