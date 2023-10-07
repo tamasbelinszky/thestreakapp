@@ -5,6 +5,7 @@ import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next
 import { type DefaultUser, type NextAuthOptions as NextAuthConfig, Session, User, getServerSession } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+// TODO: It should rely on process.env or @aws-sdk/client-ssm + env at build time
 import { Config } from "sst/node/config";
 import { Table } from "sst/node/table";
 
@@ -33,15 +34,14 @@ const dynamoDbClient = DynamoDBDocument.from(new DynamoDB(awsConfig), {
 });
 
 export const nextAuthConfig = {
-  // Configure one or more authentication providers
   providers: [
     GithubProvider({
       clientId: Config.GITHUB_ID,
       clientSecret: Config.GITHUB_SECRET,
     }),
     GoogleProvider({
-      clientId: Config.GOOGLE_CLIENT_ID,
-      clientSecret: Config.GOOGLE_CLIENT_SECRET,
+      clientId: Config.GOOGLE_CLIENT_ID as string,
+      clientSecret: Config.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
   adapter: DynamoDBAdapter(dynamoDbClient, {
@@ -52,7 +52,7 @@ export const nextAuthConfig = {
     indexPartitionKey: "gsi1pk",
     indexSortKey: "gsi1sk",
   }),
-  secret: Config.NEXT_AUTH_SECRET,
+  secret: process.env.NEXTAUTH_URL,
   callbacks: {
     session: async ({ session, user }: { session: Session; user: User }) => {
       if (session?.user) {
