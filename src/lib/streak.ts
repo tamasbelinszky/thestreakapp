@@ -177,12 +177,12 @@ export const editStreakById = async (id: string, input: StreakFormInput) => {
 };
 
 export const evaluateStreak = async (streakId: string, isCompleted: boolean, autoComplete: boolean) => {
-  if (!isCompleted && !autoComplete) {
-    await StreakEntity.patch({ id: streakId }).set({ streak: 0 }).go();
-  }
-
-  if (isCompleted && autoComplete) {
-    await StreakEntity.patch({ id: streakId }).add({ streak: 1 }).go();
+  if (!isCompleted) {
+    if (autoComplete) {
+      await StreakEntity.patch({ id: streakId }).add({ streak: 1 }).go();
+    } else {
+      await StreakEntity.patch({ id: streakId }).set({ streak: 0 }).go();
+    }
   }
 
   await StreakEntity.patch({ id: streakId }).set({ isCompleted: false }).go();
