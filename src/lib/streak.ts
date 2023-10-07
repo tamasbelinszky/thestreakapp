@@ -56,6 +56,11 @@ const StreakEntity = new Entity(
         default: false,
         required: true,
       },
+      autoComplete: {
+        type: "boolean",
+        default: false,
+        required: true,
+      },
       createdAt: {
         type: "string",
         readOnly: true,
@@ -110,6 +115,7 @@ const streakFormSchema = z.object({
   }),
   period: z.enum(["daily", "weekly"]),
   isCompleted: z.boolean(),
+  autoComplete: z.boolean().default(false),
   streak: z.number().optional(),
 });
 
@@ -170,9 +176,13 @@ export const editStreakById = async (id: string, input: StreakFormInput) => {
     .go();
 };
 
-export const evaluateStreak = async (streakId: string, isCompleted: boolean) => {
+export const evaluateStreak = async (streakId: string, isCompleted: boolean, autoComplete: boolean) => {
   if (!isCompleted) {
-    await StreakEntity.patch({ id: streakId }).set({ streak: 0 }).go();
+    if (autoComplete) {
+      await StreakEntity.patch({ id: streakId }).add({ streak: 1 }).go();
+    } else {
+      await StreakEntity.patch({ id: streakId }).set({ streak: 0 }).go();
+    }
   }
 
   await StreakEntity.patch({ id: streakId }).set({ isCompleted: false }).go();
