@@ -109,9 +109,6 @@ dependencies:
   openai:
     specifier: ^4.11.0
     version: 4.11.0
-  openai-edge:
-    specifier: ^1.2.2
-    version: 1.2.2
   postcss:
     specifier: 8.4.29
     version: 8.4.29
@@ -7389,11 +7386,6 @@ packages:
     dependencies:
       mimic-fn: 2.1.0
     dev: true
-
-  /openai-edge@1.2.2:
-    resolution: {integrity: sha512-C3/Ao9Hkx5uBPv9YFBpX/x59XMPgPUU4dyGg/0J2sOJ7O9D98kD+lfdOc7v/60oYo5xzMGct80uFkYLH+X2qgw==}
-    engines: {node: '>=18'}
-    dev: false
 
   /openai@4.11.0:
     resolution: {integrity: sha512-zU/MJxZTijL0Ym6CKoQPbnmHDsGZlH9g5zorPszdc41OyLxlhnlrorBcGzmGS9qpnjGGNncJR1hfg/mXq0OONw==}
