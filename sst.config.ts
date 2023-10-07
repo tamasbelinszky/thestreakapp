@@ -72,7 +72,7 @@ export default {
       });
 
       const streakValuatorFunction = new Function(stack, `streakValuatorFunction-${app.stage}`, {
-        handler: "packages/functions/src/events/streak-valuator.handler",
+        handler: "src/functions/streak-valuator.handler",
         bind: [myTable, ...Object.values(secretParams)],
       });
 
@@ -92,6 +92,7 @@ export default {
 
       const site = new NextjsSite(stack, "site", {
         bind: [myTable, ...Object.values(secretParams)],
+        timeout: 30,
         environment: {
           // Sst config uses top level await, next js server actions currently does not support this ( same for middleware).
           // This is why we need to pass NEXT_PUBLIC_TABLE_NAME to the db client as an env variable.
@@ -99,6 +100,9 @@ export default {
           STREAK_VALUATOR_FUNCTION_ARN: streakValuatorFunction.functionArn,
           STREAK_VALUATOR_FUNCTION_ROLE_ARN: streakValuatorFunctionRole.roleArn,
           ...env,
+        },
+        experimental: {
+          streaming: true,
         },
         permissions: [
           new iam.PolicyStatement({

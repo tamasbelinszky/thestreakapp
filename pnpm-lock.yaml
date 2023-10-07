@@ -160,8 +160,8 @@ devDependencies:
     specifier: ^0.5.4
     version: 0.5.4(@trivago/prettier-plugin-sort-imports@4.2.0)(prettier@3.0.3)
   sst:
-    specifier: ^2.25.2
-    version: 2.26.5(@types/react@18.2.21)
+    specifier: ^2.28.0
+    version: 2.28.0(@types/react@18.2.21)
 
 packages:
 
@@ -1094,7 +1094,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
 
   /@aws-sdk/client-sts@3.418.0:
     resolution: {integrity: sha512-L0n0Hw+Pm+BhXTN1bYZ0y4JAMArYgazdHf1nUSlEHndgZicCCuQtlMLxfo3i/IbtWi0dzfZcZ9d/MdAM8p4Jyw==}
@@ -1185,7 +1184,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
 
   /@aws-sdk/config-resolver@3.374.0:
     resolution: {integrity: sha512-eTSbmpcgZ97o7PuFls8pH1344OS03nfqq1NO9HxxvoYoZ6DFfUO7kqKeNUhP9LxOF7slyHXajDT7eoPclGnTuw==}
@@ -1251,7 +1249,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
 
   /@aws-sdk/credential-provider-node@3.418.0:
     resolution: {integrity: sha512-VveTjtSC6m8YXj3fQDkMKEZuHv+CR2Z4u/NAN51Fi4xOtIWUtOBj5rfZ8HmBYoBjRF0DtRlPXuMiNnXAzTctfQ==}
@@ -1288,7 +1285,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
 
   /@aws-sdk/credential-provider-process@3.418.0:
     resolution: {integrity: sha512-xPbdm2WKz1oH6pTkrJoUmr3OLuqvvcPYTQX0IIlc31tmDwDWPQjXGGFD/vwZGIZIkKaFpFxVMgAzfFScxox7dw==}
@@ -1327,7 +1323,6 @@ packages:
       tslib: 2.6.2
     transitivePeerDependencies:
       - aws-crt
-    dev: false
 
   /@aws-sdk/credential-provider-web-identity@3.418.0:
     resolution: {integrity: sha512-do7ang565n9p3dS1JdsQY01rUfRx8vkxQqz5M8OlcEHBNiCdi2PvSjNwcBdrv/FKkyIxZb0TImOfBSt40hVdxQ==}
@@ -4916,7 +4911,7 @@ packages:
     resolution: {integrity: sha512-rraC8NXWOEjhADbZe9QBNzLAN5Q3fsTPQtBV+fEVj6xKIgDgNiEVE6ZNfHpZOqfQ21YUzfVNUXLOEZquYvQPPg==}
     dependencies:
       leven: 2.1.0
-      minimist: 1.2.6
+      minimist: 1.2.8
     dev: true
 
   /compress-commons@4.1.2:
@@ -7023,7 +7018,7 @@ packages:
       duplexify: 4.1.2
       help-me: 3.0.0
       inherits: 2.0.4
-      minimist: 1.2.6
+      minimist: 1.2.8
       mqtt-packet: 6.10.0
       pump: 3.0.0
       readable-stream: 3.6.2
@@ -8230,8 +8225,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /sst@2.26.5(@types/react@18.2.21):
-    resolution: {integrity: sha512-AoeBv4p9AFS6LundatCT6IEUSwrAyr4yiM13RkXznV5C50L4Wyr9LOMD9o42Lf4Sjc6ZOEWyAhsWwvYbYkTf6Q==}
+  /sst@2.28.0(@types/react@18.2.21):
+    resolution: {integrity: sha512-w8Ui3m4wgPhJqBMr3S5Dcu0SobhwJ+H8Wd0mey/HRP4V/XmfO6RTAwUJB+P5/mWlowwuw+fdA32IddEfE3/yTw==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0
@@ -8256,7 +8251,7 @@ packages:
       '@aws-sdk/client-rds-data': 3.418.0
       '@aws-sdk/client-s3': 3.418.0
       '@aws-sdk/client-ssm': 3.418.0
-      '@aws-sdk/client-sts': 3.418.0
+      '@aws-sdk/client-sts': 3.421.0
       '@aws-sdk/config-resolver': 3.374.0
       '@aws-sdk/credential-providers': 3.418.0
       '@aws-sdk/middleware-retry': 3.374.0
