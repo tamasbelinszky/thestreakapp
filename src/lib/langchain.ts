@@ -99,3 +99,10 @@ const createChatHistory = ({ chatId }: { chatId: string }) => {
 
   return chatHistory;
 };
+
+export const deleteChatHistory = async ({ streakId }: { streakId: string }) => {
+  const chatId = composeChatId({ streakId });
+  const chatHistory = createChatHistory({ chatId });
+
+  return chatHistory.clear();
+};

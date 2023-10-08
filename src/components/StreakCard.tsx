@@ -31,6 +31,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
   streak,
   isCompleted,
 }) => {
+  // TODO: add toast for error / success messages
   const [isPending, startTransition] = useTransition();
   const { confetti } = useConfetti();
 
@@ -89,9 +90,17 @@ export const StreakCard: React.FC<StreakCardProps> = ({
               <EditIcon />
               <span className="text-sm font-medium">Edit</span>
             </Link>
-            <button className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300">
+            <button
+              onClick={async () => {
+                await fetch(`api/chat/${id}`, {
+                  method: "DELETE",
+                });
+                router.refresh();
+              }}
+              className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300"
+            >
               <ShareIcon />
-              <span className="text-sm font-medium">Share</span>
+              <span className="text-sm font-medium">Reset Chat</span>
             </button>
             <button
               onClick={async () => {
