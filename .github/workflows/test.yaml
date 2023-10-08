@@ -58,4 +58,4 @@ jobs:
       - name: Build
         id: build
         run: |
-          pnpm run build --stage production
+          pnpm run build
