@@ -36,7 +36,7 @@ export default async function Page({ params }: { params: { streakId: string } })
 
         if (!content) {
           console.log("no content: ", JSON.stringify(e, null, 2));
-          return null; // or provide a default message object if you prefer
+          return null;
         }
 
         return {

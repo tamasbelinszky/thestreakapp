@@ -13,7 +13,6 @@ export const model = new ChatOpenAI({
 });
 
 export const chainz = async ({ streakId }: { streakId: string }) => {
-  // TODO: learn how to use this
   const getCurrentDate = () => {
     return new Date().toISOString();
   };
@@ -85,7 +84,7 @@ const createChatHistory = ({ chatId }: { chatId: string }) => {
   const chatHistory = new DynamoDBChatMessageHistory({
     tableName: Table.table.tableName,
     partitionKey: "pk",
-    // could not use anything else here
+    // this will result in "sk" as value which is fine
     sortKey: "sk",
     sessionId: chatId, // unique id for the conversation
     config: {
