@@ -1,26 +1,40 @@
-import { auth } from "@/lib/auth";
-import { openai } from "@/lib/openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
-import { NextRequest } from "next/server";
+import { chainz } from "@/lib/langchain";
+import { LangChainStream, StreamingTextResponse } from "ai";
+import { z } from "zod";
 
-// export const runtime = "edge";
+export async function POST(req: Request) {
+  const body = await req.json();
 
-export async function POST(req: NextRequest) {
-  const maybeUser = await auth();
-  if (!maybeUser?.user) {
-    return {
-      status: 401,
-      body: "Unauthorized",
-    };
-  }
-
-  const { messages } = await req.json();
-  const response = await openai.chat.completions.create({
-    model: "gpt-4",
-    stream: true,
-    messages,
-    max_tokens: 250,
+  const inputSchema = z.object({
+    streakId: z.string(),
+    messages: z.array(
+      z.object({
+        content: z.string(),
+        role: z.enum(["user", "system", "assistant"]),
+      }),
+    ),
   });
-  const stream = OpenAIStream(response);
+
+  const { streakId, messages } = inputSchema.parse(body);
+
+  const lastMessage = messages[messages.length - 1];
+
+  const { stream, handlers } = LangChainStream();
+
+  const chain = await chainz({
+    streakId,
+  });
+
+  const input = lastMessage.content;
+
+  await chain.stream(
+    {
+      input,
+    },
+    {
+      callbacks: [handlers],
+    },
+  );
+
   return new StreamingTextResponse(stream);
 }

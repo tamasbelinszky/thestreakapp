@@ -4,7 +4,7 @@ import { useConfetti } from "@/hooks/useConfetti";
 import { completeStreakById, deleteStreakById } from "@/lib/streak";
 import clsx from "clsx";
 import { format } from "date-fns";
-import { DeleteIcon, EditIcon, MessageCircleIcon, ShareIcon } from "lucide-react";
+import { DeleteIcon, EditIcon, LucideRefreshCwOff, MessageCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
@@ -31,6 +31,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
   streak,
   isCompleted,
 }) => {
+  // TODO: add toast for error / success messages
   const [isPending, startTransition] = useTransition();
   const { confetti } = useConfetti();
 
@@ -89,18 +90,32 @@ export const StreakCard: React.FC<StreakCardProps> = ({
               <EditIcon />
               <span className="text-sm font-medium">Edit</span>
             </Link>
-            <button className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300">
-              <ShareIcon />
-              <span className="text-sm font-medium">Share</span>
+            <button
+              disabled={isPending}
+              onClick={async () => {
+                startTransition(async () => {
+                  await fetch(`api/chat/${id}`, {
+                    method: "DELETE",
+                  });
+                  router.refresh();
+                });
+              }}
+              className={
+                "flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+              }
+            >
+              <LucideRefreshCwOff />
+              <span className="text-sm font-medium">Reset Chat</span>
             </button>
             <button
+              disabled={isPending}
               onClick={async () => {
                 startTransition(async () => {
                   await deleteStreakById(id);
                   router.refresh();
                 });
               }}
-              className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300"
+              className="flex w-full items-center space-x-2 rounded-lg px-2 py-2 hover:bg-gray-200 active:bg-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <DeleteIcon />
               <span className="text-sm font-medium">Delete</span>

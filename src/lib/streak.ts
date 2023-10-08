@@ -37,6 +37,7 @@ const StreakEntity = new Entity(
       description: {
         type: "string",
         default: "",
+        required: true,
       },
       period: {
         type: streakPeriods,
@@ -45,6 +46,7 @@ const StreakEntity = new Entity(
       },
       startDate: {
         type: "number",
+        required: true,
         default: () => new Date().getTime(),
       },
       streak: {
@@ -109,7 +111,7 @@ const streakFormSchema = z.object({
     .max(256, {
       message: "Description must not be longer than 256 characters.",
     })
-    .optional(),
+    .default(""),
   startDate: z.date({
     required_error: "A start date is required to count the streak.",
   }),

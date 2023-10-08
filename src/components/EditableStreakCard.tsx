@@ -65,7 +65,7 @@ export const EditableStreakCard: React.FC<z.infer<typeof streakFormSchema> & { i
   });
 
   return (
-    <div className="flex flex-col items-center justify-center gap-1 p-4 lg:p-8">
+    <div className="flex flex-col items-center justify-center gap-1 p-8">
       <Link href={"/streak"} className={buttonVariants({ size: "sm", variant: "ghost" })}>
         <ArrowLeftIcon />
       </Link>
