@@ -1,27 +1,31 @@
 import { chainz } from "@/lib/langchain";
 import { LangChainStream, StreamingTextResponse } from "ai";
+import { z } from "zod";
 
 export async function POST(req: Request) {
-  const { messages } = (await req.json()) as {
-    messages: {
-      content: string;
-      role: "user" | "system" | "assistant";
-    }[];
-  };
+  const body = await req.json();
 
-  const lastMessage = messages[messages.length - 1].content;
-  const systemMessage = messages.find((m) => m.role === "system")?.content;
+  const inputSchema = z.object({
+    streakId: z.string(),
+    messages: z.array(
+      z.object({
+        content: z.string(),
+        role: z.enum(["user", "system", "assistant"]),
+      }),
+    ),
+  });
+
+  const { streakId, messages } = inputSchema.parse(body);
+
+  const lastMessage = messages[messages.length - 1];
 
   const { stream, handlers, writer: _ } = LangChainStream();
 
-  const chain = chainz({
-    uniqueChatSessionId: "etwzz",
+  const chain = await chainz({
+    streakId,
   });
 
-  const input = lastMessage.concat(systemMessage ?? "");
-  console.debug({
-    input: JSON.stringify(input, null, 2),
-  });
+  const input = lastMessage.content;
 
   await chain.stream(
     {

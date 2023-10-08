@@ -1,10 +1,13 @@
 import { Chat } from "@/components/chat/Chat";
 import { auth } from "@/lib/auth";
+import { getLangChainMessages } from "@/lib/langchain";
 import { getStreakById } from "@/lib/streak";
 import { Message } from "ai/react";
 
 export default async function Page({ params }: { params: { streakId: string } }) {
   const { data } = await getStreakById(params.streakId);
+  const res = await getLangChainMessages(params.streakId);
+
   const maybeUser = await auth();
 
   if (!maybeUser?.user) {
@@ -20,20 +23,28 @@ export default async function Page({ params }: { params: { streakId: string } })
   const initialChatMessages: Message[] = [
     {
       id: "1",
-      content: `Context: Discussing progress on goal named "${data?.name}".
-      period: ${data?.period}
-      username: ${username}
-      current streak: ${data?.streak}
-      Is already completed for the given period: ${data?.isCompleted}
-      Is on autoComplete: ${data?.autoComplete} (if true, the streak will be automatically completed when the period ends)
-      `,
-      role: "system",
-    },
-    {
-      id: "2",
       content: `Hi ${username?.substring(username.indexOf(" "))}, how can I help you?`,
       role: "assistant",
     },
+    ...res
+      .map((e, index) => {
+        const content = e?.lc_kwargs?.content;
+
+        const isUserMessage = e?.lc_id.find((e) => e === "HumanMessage");
+
+        if (!content) {
+          console.log("no content: ", JSON.stringify(e, null, 2));
+          return null; // or provide a default message object if you prefer
+        }
+
+        return {
+          id: `${index + 2}`,
+          content,
+          role: isUserMessage ? "user" : "assistant",
+        };
+      })
+      .filter((message): message is Message => Boolean(message)),
   ];
-  return <Chat initialMessages={initialChatMessages} />;
+
+  return <Chat initialMessages={initialChatMessages} streakId={params.streakId} />;
 }

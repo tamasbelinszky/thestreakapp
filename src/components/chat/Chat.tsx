@@ -7,7 +7,7 @@ import { Message, useChat } from "ai/react";
 import { SendIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-export const Chat = (props: { initialMessages: Message[] }) => {
+export const Chat = (props: { initialMessages: Message[]; streakId: string }) => {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     initialMessages: props.initialMessages,
   });
@@ -40,7 +40,13 @@ export const Chat = (props: { initialMessages: Message[] }) => {
           <div className="flex flex-col">
             <form
               onSubmit={(data) => {
-                return handleSubmit(data);
+                return handleSubmit(data, {
+                  options: {
+                    body: {
+                      streakId: props.streakId,
+                    },
+                  },
+                });
               }}
             >
               <div className="flex items-center gap-2 p-2">
