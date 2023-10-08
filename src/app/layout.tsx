@@ -45,10 +45,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <PostHogPageview />
       </Suspense>
       <PHProvider>
-        <body className={clsx(inter.className, "realtive")}>
-          <nav className="fixed left-0 right-0 top-0 z-50 flex h-12 items-center justify-center bg-secondary px-4 shadow-sm md:max-w-sm md:justify-start md:bg-white md:shadow-none lg:px-8">
-            <NavigationSheetMenu />
-          </nav>
+        <body className={inter.className}>
           <noscript>
             <iframe
               src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_CONTAINER_ID}`}
@@ -57,8 +54,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               className="invisible hidden"
             ></iframe>
           </noscript>
-          <main className="flex h-screen w-full flex-col p-4 lg:p-8">
-            <AuthContext>{children}</AuthContext>
+          <main className="realtive flex h-screen w-full flex-col p-4 lg:p-8">
+            <AuthContext>
+              <NavigationSheetMenu />
+
+              {children}
+            </AuthContext>
           </main>
         </body>
       </PHProvider>

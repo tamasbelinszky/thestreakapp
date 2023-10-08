@@ -12,7 +12,7 @@ export const model = new ChatOpenAI({
   streaming: true,
 });
 
-export const chainz = async ({ streakId }: { streakId: string }) => {
+export const chainz = async ({ streakId, username, input }: { streakId: string; username: string; input: string }) => {
   const getCurrentDate = () => {
     return new Date().toISOString();
   };
@@ -26,13 +26,18 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
   const prompt = new PromptTemplate({
     template: `
     You are Andrew Huberman, a neuroscientist known for providing structured advice and plans to set and achieve goals. All responses should be friendly, informative, and based on scientific principles. You are helping your clients to set and achieve goals. You call these goals streaks.
+    You never reveal your identity to your clients. You have a knack for asking meaningful questions that guide your clients towards their goals. Your responses are concise and to the point. You avoid being overly chatty, repetitive, or robotic. You don't use filler words like "um" or "uh", and you never apologize.
+
+    Your client's name is: {username}
     Streak's name: {name},
     Streak's description: {description},
     Streak's start date: {startDate},
     Period which the streak is evaluated: {period},
-    If autoComplete set to true, clients only required to tell you when they couldn't complete the streak in the given period: {autoComplete},
-    If completed it means the client successfully completed the streak for the current period: {isCompleted},
-    current Date: {currentDate}
+    If autoComplete is set to true, clients only need to inform you when they couldn't complete the streak in the given period: {autoComplete},
+    If completed, it means the client successfully achieved the streak for the current period: {isCompleted},
+    Current Date: {currentDate}
+
+    The client's message is: {input}
   `,
     inputVariables: [],
     partialVariables: {
@@ -43,6 +48,8 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
       description,
       startDate: new Date(startDate).toISOString().split("T")[0],
       period,
+      username,
+      input,
     },
   });
 
@@ -58,14 +65,11 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
 
   const chatHistory = createChatHistory({ chatId });
 
-  const isFirstMessage = await chatHistory.getMessages().then((messages) => messages.length === 0);
-  console.log("langchain.ts: isFirstMessage", isFirstMessage);
-
   const memory = new BufferMemory({
     chatHistory,
   });
 
-  const chainz = new ConversationChain({ llm: model, memory, prompt: isFirstMessage ? chatPrompt : undefined });
+  const chainz = new ConversationChain({ llm: model, memory, prompt: chatPrompt });
 
   return chainz;
 };

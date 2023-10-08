@@ -14,10 +14,10 @@ export default function Home() {
       <Image src={"/icon.png"} width={64} height={64} alt="thestreakapp_icon" className="hover:animate-spin" />
       <h1 className="text-3xl font-bold">{data?.user ? `Hello ${data.user.name}! 👋` : "Welcome to thestreak"}</h1>
       {!data && (
-        <Fragment>
+        <section className="flex flex-col gap-2 sm:flex-row">
           <Button onClick={() => signIn("github")}>Sign in with Github</Button>
           <Button onClick={() => signIn("google")}>Sign in with Google</Button>
-        </Fragment>
+        </section>
       )}
 
       {data && (

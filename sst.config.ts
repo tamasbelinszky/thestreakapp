@@ -74,6 +74,7 @@ export default {
       const streakValuatorFunction = new Function(stack, `streakValuatorFunction-${app.stage}`, {
         handler: "src/functions/streak-valuator.handler",
         bind: [myTable, ...Object.values(secretParams)],
+        functionName: `streakValuatorFunction-${app.stage}`,
       });
 
       const streakValuatorFunctionRole = new Role(stack, `streakValuatorFunctionRole-${app.stage}`, {
@@ -88,6 +89,7 @@ export default {
             ],
           }),
         },
+        roleName: `streakValuatorFunctionRole-${app.stage}`,
       });
 
       const site = new NextjsSite(stack, "site", {

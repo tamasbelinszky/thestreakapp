@@ -9,19 +9,26 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export function NavigationSheetMenu() {
+  const user = useSession().data?.user;
+  if (!user) {
+    return null;
+  }
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline">
-          <MenuIcon />
-        </Button>
-      </SheetTrigger>
-      <SheetContent side={"top"} className="flex flex-col items-center justify-center gap-2">
-        <NavigationMenuItems />
-      </SheetContent>
-    </Sheet>
+    <nav className="fixed right-0 top-0 z-50 flex h-12 items-center justify-center px-4 md:max-w-[100px] md:justify-start lg:px-8">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="outline">
+            <MenuIcon />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side={"top"} className="flex flex-col items-center justify-center gap-2">
+          <NavigationMenuItems />
+        </SheetContent>
+      </Sheet>
+    </nav>
   );
 }
 

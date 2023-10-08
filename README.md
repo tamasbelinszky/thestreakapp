@@ -51,6 +51,7 @@ Opted for experimental streaming mode with SST v2.28.0 for the Next.js site, inc
 - Scheduler: Evaluate and reopen streaks for the specified period
 - Conversational AI trained to assist with maintaining focus, setting, and achieving goals
 - Auto-complete streak: an option for users to set streaks that automatically increase per period.
+- Added long term memory for chat assistants via [Langchain's DynamoDBChatMessageHistory](https://python.langchain.com/docs/integrations/memory/aws_dynamodb#dynamodbchatmessagehistory)
 
 ## Todos
 

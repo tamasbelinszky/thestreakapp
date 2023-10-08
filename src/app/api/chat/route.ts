@@ -7,6 +7,7 @@ export async function POST(req: Request) {
 
   const inputSchema = z.object({
     streakId: z.string(),
+    username: z.string(),
     messages: z.array(
       z.object({
         content: z.string(),
@@ -15,17 +16,19 @@ export async function POST(req: Request) {
     ),
   });
 
-  const { streakId, messages } = inputSchema.parse(body);
+  const { streakId, messages, username } = inputSchema.parse(body);
 
   const lastMessage = messages[messages.length - 1];
 
   const { stream, handlers } = LangChainStream();
 
+  const input = lastMessage.content;
+
   const chain = await chainz({
     streakId,
+    username,
+    input,
   });
-
-  const input = lastMessage.content;
 
   await chain.stream(
     {
