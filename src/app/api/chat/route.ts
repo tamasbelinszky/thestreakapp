@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
   const lastMessage = messages[messages.length - 1];
 
-  const { stream, handlers, writer: _ } = LangChainStream();
+  const { stream, handlers } = LangChainStream();
 
   const chain = await chainz({
     streakId,

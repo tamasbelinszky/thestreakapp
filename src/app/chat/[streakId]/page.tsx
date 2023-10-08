@@ -1,12 +1,14 @@
 import { Chat } from "@/components/chat/Chat";
 import { auth } from "@/lib/auth";
-import { getLangChainMessages } from "@/lib/langchain";
+import { composeChatId, getLangChainMessages } from "@/lib/langchain";
 import { getStreakById } from "@/lib/streak";
 import { Message } from "ai/react";
 
 export default async function Page({ params }: { params: { streakId: string } }) {
   const { data } = await getStreakById(params.streakId);
-  const res = await getLangChainMessages(params.streakId);
+  const res = await getLangChainMessages({
+    chatId: composeChatId({ streakId: params.streakId }),
+  });
 
   const maybeUser = await auth();
 

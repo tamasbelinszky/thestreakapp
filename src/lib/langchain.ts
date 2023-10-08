@@ -1,13 +1,7 @@
 import { ConversationChain } from "langchain/chains";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { BufferMemory } from "langchain/memory";
-import {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-  MessagesPlaceholder,
-  PromptTemplate,
-  SystemMessagePromptTemplate,
-} from "langchain/prompts";
+import { ChatPromptTemplate, PromptTemplate, SystemMessagePromptTemplate } from "langchain/prompts";
 import { DynamoDBChatMessageHistory } from "langchain/stores/message/dynamodb";
 import { Table } from "sst/node/table";
 
@@ -27,6 +21,8 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
   const { data } = await getStreakById(streakId);
   if (!data) throw new Error("Streak not found");
   const { name, description, startDate, period, autoComplete, isCompleted } = data;
+
+  const chatId = composeChatId({ streakId });
 
   const prompt = new PromptTemplate({
     template: `
@@ -61,7 +57,7 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
     text: string;
   }>([systemMessagePrompt]);
 
-  const chatHistory = createChatHistory(streakId);
+  const chatHistory = createChatHistory({ chatId });
 
   const isFirstMessage = await chatHistory.getMessages().then((messages) => messages.length === 0);
   console.log("langchain.ts: isFirstMessage", isFirstMessage);
@@ -75,19 +71,23 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
   return chainz;
 };
 
-export const getLangChainMessages = async (streakId: string) => {
-  const chatHistory = createChatHistory(streakId);
+export const composeChatId = ({ streakId }: { streakId: string }) => {
+  return `CHAT#${streakId}`;
+};
+
+export const getLangChainMessages = async ({ chatId }: { chatId: string }) => {
+  const chatHistory = createChatHistory({ chatId });
 
   return chatHistory.getMessages();
 };
 
-const createChatHistory = (streakId: string) => {
+const createChatHistory = ({ chatId }: { chatId: string }) => {
   const chatHistory = new DynamoDBChatMessageHistory({
     tableName: Table.table.tableName,
     partitionKey: "pk",
     // could not use anything else here
     sortKey: "sk",
-    sessionId: streakId, // unique id for the conversation
+    sessionId: chatId, // unique id for the conversation
     config: {
       region: process.env.NEXT_AUTH_AWS_REGION,
       credentials: {
