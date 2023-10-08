@@ -12,7 +12,7 @@ export const model = new ChatOpenAI({
   streaming: true,
 });
 
-export const chainz = async ({ streakId }: { streakId: string }) => {
+export const chainz = async ({ streakId, username }: { streakId: string; username: string }) => {
   const getCurrentDate = () => {
     return new Date().toISOString();
   };
@@ -26,6 +26,7 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
   const prompt = new PromptTemplate({
     template: `
     You are Andrew Huberman, a neuroscientist known for providing structured advice and plans to set and achieve goals. All responses should be friendly, informative, and based on scientific principles. You are helping your clients to set and achieve goals. You call these goals streaks.
+    Your client's name is: {username}
     Streak's name: {name},
     Streak's description: {description},
     Streak's start date: {startDate},
@@ -43,6 +44,7 @@ export const chainz = async ({ streakId }: { streakId: string }) => {
       description,
       startDate: new Date(startDate).toISOString().split("T")[0],
       period,
+      username,
     },
   });
 

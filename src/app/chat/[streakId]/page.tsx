@@ -16,7 +16,7 @@ export default async function Page({ params }: { params: { streakId: string } })
     return null;
   }
 
-  const username = maybeUser.user.name;
+  const username = maybeUser.user.name?.substring(maybeUser.user.name.indexOf(" "));
 
   if (!data) {
     return <div>loading...</div>;
@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: { streakId: string } })
   const initialChatMessages: Message[] = [
     {
       id: "1",
-      content: `Hi ${username?.substring(username.indexOf(" "))}, how can I help you?`,
+      content: `Hi ${username}, how can I help you?`,
       role: "assistant",
     },
     ...res
@@ -48,5 +48,7 @@ export default async function Page({ params }: { params: { streakId: string } })
       .filter((message): message is Message => Boolean(message)),
   ];
 
-  return <Chat initialMessages={initialChatMessages} streakId={params.streakId} />;
+  return (
+    <Chat initialMessages={initialChatMessages} streakId={params.streakId} username={username ?? "TheStreakAppUser"} />
+  );
 }

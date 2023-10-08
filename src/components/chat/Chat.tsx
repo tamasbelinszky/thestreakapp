@@ -7,7 +7,7 @@ import { Message, useChat } from "ai/react";
 import { SendIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-export const Chat = (props: { initialMessages: Message[]; streakId: string }) => {
+export const Chat = (props: { initialMessages: Message[]; streakId: string; username: string }) => {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     initialMessages: props.initialMessages,
   });
@@ -44,6 +44,7 @@ export const Chat = (props: { initialMessages: Message[]; streakId: string }) =>
                   options: {
                     body: {
                       streakId: props.streakId,
+                      username: props.username,
                     },
                   },
                 });
