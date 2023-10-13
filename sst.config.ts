@@ -75,6 +75,9 @@ export default {
         handler: "src/functions/streak-valuator.handler",
         bind: [myTable, ...Object.values(secretParams)],
         functionName: `streakValuatorFunction-${app.stage}`,
+        environment: {
+          NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
+        },
       });
 
       const streakValuatorFunctionRole = new Role(stack, `streakValuatorFunctionRole-${app.stage}`, {
