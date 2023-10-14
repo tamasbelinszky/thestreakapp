@@ -49,6 +49,8 @@ export const StreakForm = () => {
   const form = useForm<StreakFormInput>({
     resolver: zodResolver(streakFormSchema),
     defaultValues: {
+      // TODO: GENERATE random streak item feature
+      // create like 10 and then randomly select one
       period: "daily",
       autoComplete: true,
     },

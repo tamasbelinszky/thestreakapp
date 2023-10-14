@@ -9,25 +9,63 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
+import { PropsWithChildren, useEffect } from "react";
 
 export function NavigationSheetMenu() {
   const user = useSession().data?.user;
-  if (!user) {
-    return null;
-  }
+  const router = useRouter();
+  const posthog = usePostHog();
+  const searchParams = useSearchParams();
+
+  const signedInState = searchParams.get("signedInState");
+
+  useEffect(() => {
+    if (signedInState === "signedIn" && user?.email) {
+      posthog.identify(user.email);
+      router.replace("/streak");
+    }
+  }, [user?.email, signedInState, router, posthog]);
+
+  useEffect(() => {
+    if (signedInState === "signedOut") {
+      posthog.reset();
+      router.replace("/");
+    }
+  }, [posthog, router, signedInState]);
+
   return (
-    <nav className="fixed right-0 top-0 z-50 flex h-12 items-center justify-center px-4 md:max-w-[100px] md:justify-start lg:px-8">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline">
-            <MenuIcon />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side={"top"} className="flex flex-col items-center justify-center gap-2">
-          <NavigationMenuItems />
-        </SheetContent>
-      </Sheet>
+    <nav className="fixed right-0 top-0 z-50 flex h-12 items-center justify-center md:max-w-[200px] md:justify-start">
+      {user ? (
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline">
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side={"top"} className="flex flex-col items-center justify-center gap-2">
+            <NavigationMenuItems>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  signOut({ callbackUrl: "/?signedInState=signedOut" });
+                }}
+              >
+                Sign Out
+              </Button>
+            </NavigationMenuItems>
+          </SheetContent>
+        </Sheet>
+      ) : // <NavigationMenu>
+      //   <NavigationMenuList>
+      //     <NavigationMenuItem>
+      //       <Button onClick={() => signIn("", { callbackUrl: "/?signedInState=signedIn" })}>Sign in</Button>
+      //     </NavigationMenuItem>
+      //   </NavigationMenuList>
+      // </NavigationMenu>
+      null}
     </nav>
   );
 }
@@ -43,7 +81,7 @@ const MENU_ITEMS = [
   },
 ] as const;
 
-export const NavigationMenuItems = () => {
+export const NavigationMenuItems: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <NavigationMenu>
       <NavigationMenuList className="flex items-center justify-center gap-2">
@@ -52,6 +90,7 @@ export const NavigationMenuItems = () => {
             <NavigationMenuLink href={href}>{name}</NavigationMenuLink>
           </NavigationMenuItem>
         ))}
+        {children}
       </NavigationMenuList>
     </NavigationMenu>
   );

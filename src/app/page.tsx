@@ -1,42 +1,29 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import { Fragment } from "react";
 
 export default function Home() {
-  const { data } = useSession();
-
   return (
     <div className="flex flex-col items-center justify-center gap-6 lg:gap-24">
-      <Image src={"/icon.png"} width={64} height={64} alt="thestreakapp_icon" className="hover:animate-spin" />
-      <h1 className="text-3xl font-bold">{data?.user ? `Hello ${data.user.name}! 👋` : "Welcome to thestreak"}</h1>
-      {!data && (
-        <section className="flex flex-col gap-2 sm:flex-row">
-          <Button onClick={() => signIn("github")}>Sign in with Github</Button>
-          <Button onClick={() => signIn("google")}>Sign in with Google</Button>
-        </section>
-      )}
-
-      {data && (
-        <div className="flex flex-col gap-8">
-          <Link className={buttonVariants({ size: "lg" })} href="/streak">
-            Go to Streak
-          </Link>
-          <Button
-            className={buttonVariants({
-              size: "lg",
-              variant: "outline",
-              className: "text-black",
-            })}
-            onClick={() => signOut()}
-          >
-            Sign out
+      <div className="flex justify-center">
+        <section>
+          <h1 className="text-4xl font-bold">The Streak App</h1>
+          <h2 className="text-xl font-semibold">Streaks Unleashed!</h2>
+          <p className="text-center">Create streaks and track your progress. How long can you go?</p>
+          <Button size={"lg"} onClick={() => signIn("", { callbackUrl: "/streak?signedInState=signedIn" })}>
+            Get Started
           </Button>
-        </div>
-      )}
+        </section>
+      </div>
+      <Image
+        src={"/thestreakapp-icon.png"}
+        width={64}
+        height={64}
+        alt="thestreakapp_icon"
+        className="hover:animate-spin"
+      />
     </div>
   );
 }
