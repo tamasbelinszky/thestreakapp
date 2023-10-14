@@ -12,14 +12,14 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The Streak App | Streaks Unleashed!",
-  description: "Create streaks and track your progress. How long can you go?",
+  title: "The Streak App | Set and achieve goals",
+  description: "Turn goals into streaks. How long can you go?",
   applicationName: "thestreakapp",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://thestreakapp.com",
-    description: "Create streaks and track your progress. How long can you go?",
+    description: "Turn goals into streaks. How long can you go?",
     images: [
       {
         url: "https://thestreakapp.com/opengraph-image.png",
