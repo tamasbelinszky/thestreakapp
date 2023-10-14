@@ -1,15 +1,16 @@
-import { auth } from "@/lib/auth";
+import { getNamePreference } from "@/lib/preferences";
 
 import { ProfileForm } from "./ProfileForm";
 
 export default async function SettingsPage() {
-  const data = await auth();
-  if (!data?.user) {
-    return null;
-  }
+  const data = await getNamePreference();
   return (
-    <div className="flex flex-col items-center justify-center gap-1 p-8">
-      <ProfileForm name={data.user.name ?? ""} />
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Profile</h3>
+        <p className="text-sm text-muted-foreground">Change your profile settings</p>
+      </div>
+      <ProfileForm firstName={data.firstName} lastName={data.lastName} />
     </div>
   );
 }

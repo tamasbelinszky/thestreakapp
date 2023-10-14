@@ -18,7 +18,7 @@ export default async function SettingsNotificationsPage() {
           period: data?.period ? data.period : "weekly",
           hour: data?.hour ? data.hour : 9,
           minute: data?.minute ? data.minute : 0,
-          enabled: data?.enabled ? data.enabled : true,
+          enabled: data?.enabled ?? true,
         }}
       />
     </div>

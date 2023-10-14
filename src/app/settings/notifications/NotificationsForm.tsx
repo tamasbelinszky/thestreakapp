@@ -7,7 +7,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { createPreference } from "@/lib/preferences";
+import { createPreferenceServerAction } from "@/lib/preferences";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
@@ -26,8 +26,8 @@ const notificationsFormSchema = z.object({
   startDate: z.date({
     required_error: "A date for the first notification is required.",
   }),
-  hour: z.number().min(0).max(23, { message: "Hour must be between 0 and 23." }),
-  minute: z.number().min(0).max(59, { message: "Minute must be between 0 and 59." }),
+  hour: z.coerce.number().min(0).max(23, { message: "Hour must be between 0 and 23." }),
+  minute: z.coerce.number().min(0).max(59, { message: "Minute must be between 0 and 59." }),
   period: z.enum(["daily", "weekly"], {
     required_error: "A period is required to schedule notifications.",
   }),
@@ -44,7 +44,7 @@ export const NotificationsForm: React.FC<{
   const router = useRouter();
 
   async function onSubmit(data: NotificationsFormValues) {
-    await createPreference(data);
+    await createPreferenceServerAction(data);
     router.refresh();
   }
 
@@ -64,7 +64,7 @@ export const NotificationsForm: React.FC<{
                 </FormDescription>
               </div>
               <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <Switch checked={field.value} onCheckedChange={field.onChange} defaultChecked={defaultValues.enabled} />
               </FormControl>
             </FormItem>
           )}

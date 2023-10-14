@@ -1,6 +1,5 @@
 "use server";
 
-import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
 import { z } from "zod";
 
@@ -22,6 +21,16 @@ const PreferencesEntity = new Entity(
       userId: {
         type: "string",
         required: true,
+      },
+      firstName: {
+        type: "string",
+        required: true,
+        default: "",
+      },
+      lastName: {
+        type: "string",
+        required: true,
+        default: "",
       },
       appNotifications: {
         type: "map",
@@ -97,9 +106,30 @@ const appNotificationPreferenceFormSchema = z.object({
   enabled: z.boolean(),
 });
 
+const preferenceSchema = z.object({
+  appNotifications: appNotificationPreferenceFormSchema,
+  firstName: z.string(),
+  lastName: z.string(),
+  userId: z.string(),
+});
+
+type PreferenceInput = z.infer<typeof preferenceSchema>;
+
 export type AppNotificationPreferencesFormInput = z.infer<typeof appNotificationPreferenceFormSchema>;
 
-export const createPreference = async (input: AppNotificationPreferencesFormInput) => {
+export const createPreference = async (input: PreferenceInput) => {
+  const validatedInput = preferenceSchema.parse(input);
+
+  return PreferencesEntity.create({
+    userId: validatedInput.userId,
+    appNotifications: {
+      ...validatedInput.appNotifications,
+      startDate: validatedInput.appNotifications.startDate.getTime(),
+    },
+  }).go();
+};
+
+export const createPreferenceServerAction = async (input: AppNotificationPreferencesFormInput) => {
   const validatedInput = appNotificationPreferenceFormSchema.parse(input);
 
   const maybeUser = await auth();
@@ -162,4 +192,37 @@ export const getAppNotificationPreferences = async () => {
   }
 
   return preferences.data?.appNotifications;
+};
+
+export const getNamePreference = async () => {
+  const maybeUser = await auth();
+
+  if (!maybeUser?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const userId = maybeUser.user.id;
+
+  const preferences = await PreferencesEntity.get({ userId }).go();
+
+  if (!preferences?.data) {
+    throw new Error("Preferences not found");
+  }
+
+  return {
+    firstName: preferences.data.firstName,
+    lastName: preferences.data.lastName,
+  };
+};
+
+export const updateNamePreference = async (firstName: string, lastName: string) => {
+  const maybeUser = await auth();
+
+  if (!maybeUser?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const userId = maybeUser.user.id;
+
+  return PreferencesEntity.patch({ userId }).set({ firstName, lastName }).go();
 };
