@@ -1,6 +1,9 @@
+"use server";
+
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
 
+import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 
 // eslint-disable-next-line no-unused-vars
@@ -64,3 +67,20 @@ const Users = new Entity(
   },
   Dynamo.Service,
 );
+
+export const getUserById = async (id: string) => {
+  const user = await Users.get({ id }).go();
+  return user;
+};
+
+export const updateUserName = async (name: string) => {
+  const data = await auth();
+  if (!data?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  if (name.length < 3) {
+    throw new Error("Name must be at least 3 characters long");
+  }
+  return Users.update({ id: data.user.id }).set({ name }).go();
+};

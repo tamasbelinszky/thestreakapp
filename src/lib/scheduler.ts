@@ -110,3 +110,31 @@ export const deleteStreakSchedule = async (streakId: string) => {
 
   return schedulerClient.send(command);
 };
+
+export const createOrUpdateNotificationSchedule = async ({
+  userId,
+  period,
+  hour,
+  startDate,
+  minute,
+}: {
+  userId: string;
+  period: StreakPeriod;
+  startDate: Date;
+  hour: number;
+  minute: number;
+}) => {};
+
+export const composeNotificationScheduleName = (userId: string) => {
+  return `USER-${userId}-NOTIFICATION`;
+};
+
+export const getNotificationScheduleByName = async (userId: string) => {
+  const name = composeNotificationScheduleName(userId);
+
+  const command = new GetScheduleCommand({
+    Name: name,
+  });
+
+  return schedulerClient.send(command);
+};

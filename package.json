@@ -28,6 +28,7 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-navigation-menu": "^1.1.4",
     "@radix-ui/react-popover": "^1.0.6",
+    "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.4",
@@ -68,10 +69,10 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.10",
     "aws-cdk-lib": "2.95.1",
     "constructs": "10.2.69",
     "prettier": "^3.0.3",
-    "@types/mailchimp__mailchimp_marketing": "^3.0.10",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "sst": "^2.28.0"
   },
