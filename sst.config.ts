@@ -3,7 +3,7 @@ import * as cdk from "aws-cdk-lib";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import iam from "aws-cdk-lib/aws-iam";
-import dotenv, { config } from "dotenv";
+import dotenv from "dotenv";
 import { SSTConfig } from "sst";
 import { Config, Function, NextjsSite, Table } from "sst/constructs";
 import { z } from "zod";
@@ -17,6 +17,9 @@ const envSchema = z.object({
   NEXT_PUBLIC_POSTHOG_HOST: z.string(),
   NEXT_AUTH_AWS_ACCESS_KEY: z.string(),
   OPENAI_API_KEY: z.string(),
+  MAILCHIMP_API_KEY: z.string(),
+  MAILCHIMP_SERVER_PREFIX: z.string().default("us12"),
+  MAILCHIMP_LIST_ID: z.string().default("23a56060ac"),
 });
 
 export default {
@@ -43,6 +46,9 @@ export default {
         "GITHUB_SECRET",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
+        "MAILCHIMP_API_KEY",
+        "MAILCHIMP_SERVER_PREFIX",
+        "MAILCHIMP_LIST_ID",
       );
 
       const myTable = new Table(stack, "table", {
@@ -69,6 +75,17 @@ export default {
           },
         },
         timeToLiveAttribute: "expires",
+        stream: true,
+        consumers: {
+          dynamoDbStreamConsumer: {
+            function: {
+              timeout: 30,
+              functionName: `dynamoDbStreamConsumer-${app.stage}`,
+              handler: "src/functions/dynamodb-stream.handler",
+              bind: [...Object.values(secretParams)],
+            },
+          },
+        },
       });
 
       const streakValuatorFunction = new Function(stack, `streakValuatorFunction-${app.stage}`, {
