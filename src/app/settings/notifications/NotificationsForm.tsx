@@ -1,5 +1,6 @@
 "use client";
 
+import { PERIODS } from "@/app/constants";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
@@ -28,7 +29,7 @@ const notificationsFormSchema = z.object({
   }),
   hour: z.coerce.number().min(0).max(23, { message: "Hour must be between 0 and 23." }),
   minute: z.coerce.number().min(0).max(59, { message: "Minute must be between 0 and 59." }),
-  period: z.enum(["daily", "weekly"], {
+  period: z.enum(PERIODS, {
     required_error: "A period is required to schedule notifications.",
   }),
 });

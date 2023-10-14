@@ -1,14 +1,11 @@
 "use server";
 
+import { PERIODS, TIMEZONES } from "@/app/constants";
 import { Entity } from "electrodb";
 import { z } from "zod";
 
 import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
-
-const preferencePeriods = ["daily", "weekly"] as const;
-
-export type PreferencePeriod = (typeof preferencePeriods)[number];
 
 const PreferencesEntity = new Entity(
   {
@@ -21,6 +18,15 @@ const PreferencesEntity = new Entity(
       userId: {
         type: "string",
         required: true,
+      },
+      email: {
+        type: "string",
+        required: true,
+      },
+      timezone: {
+        type: TIMEZONES,
+        required: true,
+        default: "Europe/Budapest",
       },
       firstName: {
         type: "string",
@@ -46,8 +52,8 @@ const PreferencesEntity = new Entity(
             default: () => new Date().getTime(),
           },
           period: {
-            type: preferencePeriods,
-            default: preferencePeriods[0],
+            type: PERIODS,
+            default: PERIODS[0],
             required: true,
           },
           hour: {
@@ -63,7 +69,7 @@ const PreferencesEntity = new Entity(
         default: {
           enabled: true,
           startDate: () => new Date().getTime(),
-          period: preferencePeriods[0],
+          period: PERIODS[0],
           hour: 0,
           minute: 0,
         },
@@ -100,34 +106,13 @@ const appNotificationPreferenceFormSchema = z.object({
   startDate: z.date({
     required_error: "A start date is required for the preference.",
   }),
-  period: z.enum(preferencePeriods),
+  period: z.enum(PERIODS),
   hour: z.number().min(0).max(23), // 24-hour format for hour
   minute: z.number().min(0).max(59),
   enabled: z.boolean(),
 });
 
-const preferenceSchema = z.object({
-  appNotifications: appNotificationPreferenceFormSchema,
-  firstName: z.string(),
-  lastName: z.string(),
-  userId: z.string(),
-});
-
-type PreferenceInput = z.infer<typeof preferenceSchema>;
-
 export type AppNotificationPreferencesFormInput = z.infer<typeof appNotificationPreferenceFormSchema>;
-
-export const createPreference = async (input: PreferenceInput) => {
-  const validatedInput = preferenceSchema.parse(input);
-
-  return PreferencesEntity.create({
-    userId: validatedInput.userId,
-    appNotifications: {
-      ...validatedInput.appNotifications,
-      startDate: validatedInput.appNotifications.startDate.getTime(),
-    },
-  }).go();
-};
 
 export const createPreferenceServerAction = async (input: AppNotificationPreferencesFormInput) => {
   const validatedInput = appNotificationPreferenceFormSchema.parse(input);
@@ -139,13 +124,17 @@ export const createPreferenceServerAction = async (input: AppNotificationPrefere
 
   const userId = maybeUser.user.id;
 
-  return PreferencesEntity.put({
+  return PreferencesEntity.patch({
     userId,
-    appNotifications: {
-      ...validatedInput,
-      startDate: validatedInput.startDate.getTime(),
-    },
-  }).go();
+  })
+    .set({
+      appNotifications: {
+        ...validatedInput,
+
+        startDate: validatedInput.startDate.getTime(),
+      },
+    })
+    .go();
 };
 
 export const getPreferenceById = async (userId: string) => {
@@ -194,7 +183,7 @@ export const getAppNotificationPreferences = async () => {
   return preferences.data?.appNotifications;
 };
 
-export const getNamePreference = async () => {
+export const getProfile = async () => {
   const maybeUser = await auth();
 
   if (!maybeUser?.user?.id) {
@@ -212,10 +201,11 @@ export const getNamePreference = async () => {
   return {
     firstName: preferences.data.firstName,
     lastName: preferences.data.lastName,
+    timezone: preferences.data.timezone,
   };
 };
 
-export const updateNamePreference = async (firstName: string, lastName: string) => {
+export const updateProfile = async (firstName: string, lastName: string, timezone: (typeof TIMEZONES)[number]) => {
   const maybeUser = await auth();
 
   if (!maybeUser?.user?.id) {
@@ -224,5 +214,5 @@ export const updateNamePreference = async (firstName: string, lastName: string) 
 
   const userId = maybeUser.user.id;
 
-  return PreferencesEntity.patch({ userId }).set({ firstName, lastName }).go();
+  return PreferencesEntity.patch({ userId }).set({ firstName, lastName, timezone }).go();
 };

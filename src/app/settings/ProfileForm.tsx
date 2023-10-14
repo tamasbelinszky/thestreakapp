@@ -1,14 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { updateNamePreference } from "@/lib/preferences";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { updateProfile } from "@/lib/preferences";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowDown, CheckIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { TIMEZONES } from "../constants";
 
 const profileFormSchema = z.object({
   firstName: z
@@ -26,25 +32,26 @@ const profileFormSchema = z.object({
     })
     .optional()
     .default(""),
+  timezone: z.enum(TIMEZONES, {
+    required_error: "A timezone is required to schedule notifications.",
+  }),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-export const ProfileForm: React.FC<Partial<ProfileFormValues>> = ({ firstName, lastName }) => {
+export const ProfileForm: React.FC<Partial<ProfileFormValues>> = (props) => {
+  console.log({ props });
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues: {
-      firstName,
-      lastName,
-    },
+    defaultValues: props,
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
     startTransition(async () => {
-      await updateNamePreference(data.firstName, data.lastName);
+      await updateProfile(data.firstName, data.lastName, data.timezone);
       router.refresh();
       form.reset();
     });
@@ -79,6 +86,55 @@ export const ProfileForm: React.FC<Partial<ProfileFormValues>> = ({ firstName, l
               <FormControl>
                 <Input placeholder="Doe" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="timezone"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Period</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      role="combobox"
+                      className={cn("w-[200px] justify-between", !field.value && "text-muted-foreground")}
+                    >
+                      {field.value ? TIMEZONES.find((timezone) => timezone === field.value) : "Select timezone"}
+                      <ArrowDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search period..." required />
+                    <CommandEmpty>No period found.</CommandEmpty>
+                    <CommandGroup className="max-h-32">
+                      {TIMEZONES.map((timezone) => (
+                        <CommandItem
+                          value={timezone}
+                          key={timezone}
+                          onSelect={() => {
+                            form.setValue("timezone", timezone);
+                          }}
+                        >
+                          <CheckIcon
+                            className={cn("mr-2 h-4 w-4", timezone === field.value ? "opacity-100" : "opacity-0")}
+                          />
+                          {timezone}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <FormDescription className="hidden lg:flex">
+                This is the period that will increase your streak.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

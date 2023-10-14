@@ -19,7 +19,7 @@ const UserSchema = z.object({
   image: DynamoDBStringAttribute.optional(),
   gsi1sk: DynamoDBStringAttribute.optional(),
   gsi1pk: DynamoDBStringAttribute.optional(),
-  id: DynamoDBStringAttribute.optional(),
+  id: DynamoDBStringAttribute,
   type: DynamoDBStringAttribute.optional(),
 });
 

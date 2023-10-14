@@ -1,5 +1,6 @@
 "use server";
 
+import { PERIODS } from "@/app/constants";
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
 import { z } from "zod";
@@ -7,10 +8,6 @@ import { z } from "zod";
 import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 import { createOrUpdateStreakSchedule, deleteStreakSchedule } from "./scheduler";
-
-const streakPeriods = ["daily", "weekly"] as const;
-
-export type StreakPeriod = (typeof streakPeriods)[number];
 
 const StreakEntity = new Entity(
   {
@@ -40,8 +37,8 @@ const StreakEntity = new Entity(
         required: true,
       },
       period: {
-        type: streakPeriods,
-        default: streakPeriods[0],
+        type: PERIODS,
+        default: PERIODS[0],
         required: true,
       },
       startDate: {
@@ -115,7 +112,7 @@ const streakFormSchema = z.object({
   startDate: z.date({
     required_error: "A start date is required to count the streak.",
   }),
-  period: z.enum(["daily", "weekly"]),
+  period: z.enum(PERIODS),
   isCompleted: z.boolean(),
   autoComplete: z.boolean().default(false),
   streak: z.number().optional(),
