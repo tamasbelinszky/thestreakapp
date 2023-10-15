@@ -1,6 +1,9 @@
+import { sendStreakValuatorEmail } from "@/lib/ses";
 import { evaluateStreak, getStreakById } from "@/lib/streak";
 import { putStreakEvent } from "@/lib/streakEvent";
+import { getUserById } from "@/lib/user";
 import { type Handler } from "aws-lambda";
+import { format } from "date-fns";
 import { z } from "zod";
 
 const eventSchema = z.object({
@@ -27,6 +30,17 @@ export const handler: Handler<Event> = async (event) => {
     isCompleted: streak.data.isCompleted,
     currentStreak: streak.data.streak,
     autoComplete: streak.data.autoComplete,
+  });
+  const user = await getUserById(userId);
+  await sendStreakValuatorEmail(user.email, {
+    streak: streak.data.streak,
+    isCompleted: streak.data.isCompleted,
+    autoComplete: streak.data.autoComplete,
+    startDate: format(new Date(streak.data.startDate), "yyyy-MM-dd"),
+    period: streak.data.period,
+    description: streak.data.description,
+    name: streak.data.name,
+    id: streak.data.id,
   });
 
   return {

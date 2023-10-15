@@ -19,7 +19,8 @@ const UserSchema = z.object({
   image: DynamoDBStringAttribute.optional(),
   gsi1sk: DynamoDBStringAttribute.optional(),
   gsi1pk: DynamoDBStringAttribute.optional(),
-  id: DynamoDBStringAttribute.optional(),
+  // TODO: maybe store preference as a separate entity?
+  id: DynamoDBStringAttribute,
   type: DynamoDBStringAttribute.optional(),
 });
 

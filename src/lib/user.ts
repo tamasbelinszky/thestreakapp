@@ -1,66 +1,39 @@
-import { randomUUID } from "crypto";
-import { Entity } from "electrodb";
+import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { z } from "zod";
 
-import { Dynamo } from "./dynamo";
+const client = new DynamoDBClient({});
+const docClient = DynamoDBDocumentClient.from(client);
 
-// eslint-disable-next-line no-unused-vars
-const Users = new Entity(
-  {
-    model: {
-      entity: "user",
-      service: "",
-      version: "1",
-    },
-    attributes: {
-      id: {
-        type: "string",
-        default: () => randomUUID(),
+const userSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+});
+
+export const getUserById = async (userId: string) => {
+  const command = new GetItemCommand({
+    TableName: process.env.NEXT_PUBLIC_TABLE_NAME,
+    Key: {
+      pk: {
+        S: `USER#${userId}`, // Given your structure, the partition key is the same for user information
       },
-      name: {
-        type: "string",
-      },
-      email: {
-        type: "string",
-      },
-      emailVerified: {
-        type: "boolean",
-        nullify: true,
-      },
-      image: {
-        type: "string",
-      },
-      type: {
-        type: "string",
-      },
-      provider: {
-        type: "string",
-      },
-      providerAccountId: {
-        type: "string",
+      sk: {
+        S: `USER#${userId}`, // Given your structure, the sort key is the same for user information
       },
     },
+  });
 
-    indexes: {
-      byAccount: {
-        pk: {
-          field: "pk",
-          composite: ["id"],
-          template: "USER#${id}",
-          casing: "none",
-        },
-        sk: {
-          field: "sk",
-          composite: ["id"],
-          template: "USER#${id}",
-          casing: "none",
-        },
-      },
-      emailIndex: {
-        index: "gsi1",
-        pk: { field: "GSI1PK", composite: [] },
-        sk: { field: "GSI1SK", composite: [] },
-      },
-    },
-  },
-  Dynamo.Service,
-);
+  const response = await docClient.send(command);
+
+  if (!response.Item) {
+    throw new Error("User not found");
+  }
+
+  const name = response.Item.name.S;
+  const email = response.Item.email.S;
+
+  return userSchema.parse({
+    name,
+    email,
+  });
+};
