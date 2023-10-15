@@ -95,6 +95,13 @@ export default {
         environment: {
           NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
         },
+        permissions: [
+          new iam.PolicyStatement({
+            actions: ["ses:*", "iam:PassRole"],
+            effect: iam.Effect.ALLOW,
+            resources: ["*"],
+          }),
+        ],
       });
 
       const streakValuatorFunctionRole = new Role(stack, `streakValuatorFunctionRole-${app.stage}`, {
