@@ -90,13 +90,13 @@ export const EditableStreakCard: React.FC<z.infer<typeof fullStreakSchema> & { i
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description (optional)</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Streak's description" {...field} />
                 </FormControl>
                 <FormDescription className="hidden lg:flex">
-                  You can add a description to your streak which can be seen on the given streak item. This can remind
-                  you of the purpose of the streak.
+                  Add a description to your streak that can be viewed on the respective streak item. This serves as a
+                  reminder of the purpose of the streak.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
