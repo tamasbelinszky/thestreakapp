@@ -79,6 +79,10 @@ const MENU_ITEMS = [
     name: "Streaks",
     href: "/streak",
   },
+  {
+    name: "Settings",
+    href: "/settings",
+  },
 ] as const;
 
 export const NavigationMenuItems: React.FC<PropsWithChildren> = ({ children }) => {

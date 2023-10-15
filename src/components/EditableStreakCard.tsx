@@ -1,6 +1,5 @@
 "use client";
 
-import { PERIODS } from "@/app/constants";
 import { StreakFormInput, editStreakById } from "@/lib/streak";
 import { cn } from "@/lib/utils";
 import { fullStreakSchema } from "@/schemas/streak";

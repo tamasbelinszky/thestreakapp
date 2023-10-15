@@ -1,5 +1,6 @@
 "use server";
 
+import { PERIODS } from "@/app/constants";
 import { baseStreakSchema } from "@/schemas/streak";
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
@@ -8,10 +9,6 @@ import { z } from "zod";
 import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 import { createOrUpdateStreakSchedule, deleteStreakSchedule } from "./scheduler";
-
-const streakPeriods = ["daily", "weekly"] as const;
-
-export type StreakPeriod = (typeof streakPeriods)[number];
 
 const StreakEntity = new Entity(
   {
@@ -41,8 +38,8 @@ const StreakEntity = new Entity(
         required: true,
       },
       period: {
-        type: streakPeriods,
-        default: streakPeriods[0],
+        type: PERIODS,
+        default: PERIODS[0],
         required: true,
       },
       startDate: {
