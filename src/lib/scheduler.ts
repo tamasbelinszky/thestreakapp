@@ -1,3 +1,4 @@
+import { PERIODS } from "@/app/constants";
 import {
   CreateScheduleCommand,
   DeleteScheduleCommand,
@@ -5,8 +6,6 @@ import {
   SchedulerClient,
   UpdateScheduleCommand,
 } from "@aws-sdk/client-scheduler";
-
-import { StreakPeriod } from "./streak";
 
 const UTC_DAYS_OF_WEEK_TO_AWS = {
   0: 7,
@@ -19,6 +18,8 @@ const UTC_DAYS_OF_WEEK_TO_AWS = {
 } as const;
 
 const schedulerClient = new SchedulerClient({});
+
+type StreakPeriod = (typeof PERIODS)[number];
 
 type StreakScheduleProps = {
   streakId: string;
