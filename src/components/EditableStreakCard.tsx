@@ -1,5 +1,6 @@
 "use client";
 
+import { PERIODS } from "@/app/constants";
 import { StreakFormInput, editStreakById } from "@/lib/streak";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,7 +42,7 @@ const streakFormSchema = z.object({
       required_error: "A start date is required to count the streak.",
     })
     .optional(),
-  period: z.enum(["daily", "weekly"]),
+  period: z.enum(PERIODS),
   isCompleted: z.boolean(),
   autoComplete: z.boolean(),
 });

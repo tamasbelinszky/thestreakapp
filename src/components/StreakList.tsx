@@ -1,3 +1,4 @@
+import { PERIODS } from "@/app/constants";
 import { auth } from "@/lib/auth";
 import { getStreaksByUserId } from "@/lib/streak";
 import { z } from "zod";
@@ -9,7 +10,7 @@ const streakSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
   startDate: z.number(),
-  period: z.enum(["daily", "weekly"]),
+  period: z.enum(PERIODS),
   streak: z.number(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
