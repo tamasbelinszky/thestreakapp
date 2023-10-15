@@ -1,5 +1,6 @@
 "use server";
 
+import { baseStreakSchema } from "@/schemas/streak";
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
 import { z } from "zod";
@@ -104,24 +105,7 @@ const StreakEntity = new Entity(
   Dynamo.Service,
 );
 
-const streakFormSchema = z.object({
-  name: z.string().max(128, { message: "Name must not be longer than 128 characters." }),
-  description: z
-    .string()
-    .max(256, {
-      message: "Description must not be longer than 256 characters.",
-    })
-    .default(""),
-  startDate: z.date({
-    required_error: "A start date is required to count the streak.",
-  }),
-  period: z.enum(["daily", "weekly"]),
-  isCompleted: z.boolean(),
-  autoComplete: z.boolean().default(false),
-  streak: z.number().optional(),
-});
-
-export type StreakFormInput = z.infer<typeof streakFormSchema>;
+export type StreakFormInput = z.infer<typeof baseStreakSchema>;
 
 export const createStreak = async (input: StreakFormInput) => {
   const maybeUser = await auth();
@@ -130,7 +114,7 @@ export const createStreak = async (input: StreakFormInput) => {
     throw new Error("Unauthorized");
   }
 
-  const validatedInput = streakFormSchema.parse({
+  const validatedInput = baseStreakSchema.parse({
     ...input,
     isCompleted: false,
   });
@@ -169,7 +153,7 @@ export const completeStreakById = async (id: string) => {
 };
 
 export const editStreakById = async (id: string, input: StreakFormInput) => {
-  const validatedInput = streakFormSchema.parse(input);
+  const validatedInput = baseStreakSchema.parse(input);
   return StreakEntity.patch({ id })
     .set({
       ...validatedInput,

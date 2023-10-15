@@ -1,7 +1,9 @@
 "use client";
 
+import { PERIODS } from "@/app/constants";
 import { StreakFormInput, createStreak } from "@/lib/streak";
 import { cn } from "@/lib/utils";
+import { baseStreakSchema } from "@/schemas/streak";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
@@ -25,34 +27,16 @@ const periods = [
   { label: "Weekly", value: "weekly" },
 ] as const;
 
-const streakFormSchema = z.object({
-  name: z.string().max(128, {
-    message: "Name must not be longer than 128 characters.",
-  }),
-  description: z
-    .string()
-    .max(256, {
-      message: "Description must not be longer than 256 characters.",
-    })
-    .optional(),
-  startDate: z.date({
-    required_error: "A start date is required to count the streak.",
-  }),
-  period: z.enum(["daily", "weekly"]),
-  autoComplete: z.boolean(),
-});
-
 export const StreakForm = () => {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<StreakFormInput>({
-    resolver: zodResolver(streakFormSchema),
+    resolver: zodResolver(baseStreakSchema),
     defaultValues: {
-      // TODO: GENERATE random streak item feature
-      // create like 10 and then randomly select one
       period: "daily",
       autoComplete: true,
+      startDate: new Date(),
     },
   });
 
@@ -76,32 +60,46 @@ export const StreakForm = () => {
         <DialogTitle>Create New Streak</DialogTitle>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-2 lg:max-w-md">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Posting on LinkedIn" />
-                  </FormControl>
-                  <FormDescription className="hidden lg:flex">The name of the action you take.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="gap2 flex w-full flex-col items-center gap-2 sm:flex-row">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Posting on LinkedIn" />
+                    </FormControl>
+                    <FormDescription className="hidden lg:flex">The name of the action you take.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                variant={"catchy"}
+                onClick={() => {
+                  // TODO: good candidate for posthog experiment and / or A/B test
+                  const { name, description, period } = getRandomMicroHabit();
+                  form.setValue("name", name);
+                  form.setValue("description", description);
+                  form.setValue("period", period);
+                }}
+              >
+                Randomize Micro Habit
+              </Button>
+            </div>
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (optional)</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Streak's description" {...field} />
                   </FormControl>
                   <FormDescription className="hidden lg:flex">
-                    You can add a description to your streak which can be seen on the given streak item. This can remind
-                    you of the purpose of the streak.
+                    Add a description to your streak that can be viewed on the respective streak item. This serves as a
+                    reminder of the purpose of the streak.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -227,4 +225,72 @@ export const StreakForm = () => {
       </DialogContent>
     </Dialog>
   );
+};
+
+const microHabits = [
+  // first 10 ref: https://www.thesimplicityhabit.com/micro-habits-that-will-transform-your-life/
+  {
+    name: "Morning Hydration",
+    description:
+      "Drinking water upon waking helps rehydrate the body, kickstarting metabolism and aiding in cellular processes essential for good health.",
+    period: "daily",
+  },
+  {
+    name: "Hourly Stretching",
+    description:
+      "Taking short stretch breaks can reduce muscle stiffness, improve circulation, and reduce the risks associated with prolonged sitting.",
+    period: "daily",
+  },
+  {
+    name: "Nightly Reading",
+    description:
+      "Reading before bed can enhance brain connectivity, improve vocabulary, and provide relaxation by reducing stress levels.",
+    period: "daily",
+  },
+  {
+    name: "Daily Mindfulness",
+    description:
+      "Mindfulness and meditation can reduce anxiety, improve mental clarity, and enhance emotional health by regulating stress responses.",
+    period: "daily",
+  },
+  {
+    name: "Gratitude Journaling",
+    description:
+      "Expressing gratitude can improve mental well-being, enhance sleep quality, and foster positive life perspectives.",
+    period: "daily",
+  },
+  {
+    name: "Daily Decluttering",
+    description:
+      "Regular decluttering reduces physical and mental clutter, fostering a sense of control and reducing anxiety.",
+    period: "daily",
+  },
+  {
+    name: "Deep Breathing Exercises",
+    description:
+      "Deep breathing can activate the parasympathetic nervous system, promoting relaxation and reducing stress hormones.",
+    period: "daily",
+  },
+  {
+    name: "Setting Daily Goals",
+    description:
+      "Goal setting provides direction, enhances motivation, and offers a clear focus, leading to improved productivity.",
+    period: "daily",
+  },
+  {
+    name: "Quality Family Time",
+    description:
+      "Spending quality time with family strengthens bonds, improves mental well-being, and fosters a sense of belonging.",
+    period: "daily",
+  },
+  {
+    name: "Skill Practice",
+    description:
+      "Consistent practice can stimulate neural connectivity, promoting skill acquisition and cognitive flexibility.",
+    period: "daily",
+  },
+] as const;
+
+const getRandomMicroHabit = () => {
+  return microHabits[Math.floor(Math.random() * microHabits.length)];
 };

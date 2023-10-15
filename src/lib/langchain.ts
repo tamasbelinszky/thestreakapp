@@ -78,12 +78,6 @@ export const composeChatId = ({ streakId }: { streakId: string }) => {
   return `CHAT#${streakId}`;
 };
 
-export const getLangChainMessages = async ({ chatId }: { chatId: string }) => {
-  const chatHistory = createChatHistory({ chatId });
-
-  return chatHistory.getMessages();
-};
-
 const createChatHistory = ({ chatId }: { chatId: string }) => {
   const chatHistory = new DynamoDBChatMessageHistory({
     tableName: Table.table.tableName,
@@ -108,4 +102,11 @@ export const deleteChatHistory = async ({ streakId }: { streakId: string }) => {
   const chatHistory = createChatHistory({ chatId });
 
   return chatHistory.clear();
+};
+
+export const getChatHistoryByStreakId = async ({ streakId }: { streakId: string }) => {
+  const chatId = composeChatId({ streakId });
+  const chatHistory = createChatHistory({ chatId });
+
+  return chatHistory.getMessages();
 };

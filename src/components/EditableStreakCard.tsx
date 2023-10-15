@@ -1,7 +1,9 @@
 "use client";
 
+import { PERIODS } from "@/app/constants";
 import { StreakFormInput, editStreakById } from "@/lib/streak";
 import { cn } from "@/lib/utils";
+import { fullStreakSchema } from "@/schemas/streak";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
@@ -26,33 +28,13 @@ const periods = [
   { label: "Weekly", value: "weekly" },
 ] as const;
 
-const streakFormSchema = z.object({
-  name: z.string().max(128, {
-    message: "Name must not be longer than 128 characters.",
-  }),
-  description: z
-    .string()
-    .max(256, {
-      message: "Description must not be longer than 256 characters.",
-    })
-    .optional(),
-  startDate: z
-    .any({
-      required_error: "A start date is required to count the streak.",
-    })
-    .optional(),
-  period: z.enum(["daily", "weekly"]),
-  isCompleted: z.boolean(),
-  autoComplete: z.boolean(),
-});
-
-export const EditableStreakCard: React.FC<z.infer<typeof streakFormSchema> & { isCompleted: boolean; id: string }> = (
+export const EditableStreakCard: React.FC<z.infer<typeof fullStreakSchema> & { isCompleted: boolean; id: string }> = (
   props,
 ) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<StreakFormInput & { isCompleted: boolean }>({
-    resolver: zodResolver(streakFormSchema),
+    resolver: zodResolver(fullStreakSchema),
     defaultValues: props,
   });
 
@@ -108,13 +90,13 @@ export const EditableStreakCard: React.FC<z.infer<typeof streakFormSchema> & { i
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description (optional)</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Streak's description" {...field} />
                 </FormControl>
                 <FormDescription className="hidden lg:flex">
-                  You can add a description to your streak which can be seen on the given streak item. This can remind
-                  you of the purpose of the streak.
+                  Add a description to your streak that can be viewed on the respective streak item. This serves as a
+                  reminder of the purpose of the streak.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
