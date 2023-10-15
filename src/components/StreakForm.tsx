@@ -78,6 +78,7 @@ export const StreakForm = () => {
               <Button
                 variant={"catchy"}
                 onClick={() => {
+                  // TODO: good candidate for posthog experiment and / or A/B test
                   const { name, description, period } = getRandomMicroHabit();
                   form.setValue("name", name);
                   form.setValue("description", description);
