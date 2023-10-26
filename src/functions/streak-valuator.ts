@@ -1,4 +1,4 @@
-import { sendStreakValuatorEmail } from "@/lib/ses";
+import { sendStreakNotification } from "@/lib/sendgrid";
 import { evaluateStreak, getStreakById } from "@/lib/streak";
 import { putStreakEvent } from "@/lib/streakEvent";
 import { getUserById } from "@/lib/user";
@@ -32,17 +32,21 @@ export const handler: Handler<Event> = async (event) => {
     autoComplete: streak.data.autoComplete,
   });
   const user = await getUserById(userId);
-  await sendStreakValuatorEmail(user.email, {
-    streak: streak.data.streak,
-    isCompleted: streak.data.isCompleted,
-    autoComplete: streak.data.autoComplete,
-    startDate: format(new Date(streak.data.startDate), "yyyy-MM-dd"),
-    period: streak.data.period,
-    description: streak.data.description,
-    name: streak.data.name,
-    id: streak.data.id,
+  await sendStreakNotification({
+    to: user.email,
+    dynamicTemplateData: {
+      autoComplete: streak.data.autoComplete,
+      description: streak.data.description,
+      id: streak.data.id,
+      isCompleted: streak.data.isCompleted,
+      name: streak.data.name,
+      period: streak.data.period,
+      startDate: format(new Date(streak.data.startDate), "yyyy-MM-dd"),
+      streak: streak.data.streak,
+      createdAt: format(new Date(streak.data.createdAt!), "yyyy-MM-dd"),
+      updatedAt: format(new Date(streak.data.updatedAt!), "yyyy-MM-dd"),
+    },
   });
-
   return {
     statusCode: 200,
     body: JSON.stringify({
