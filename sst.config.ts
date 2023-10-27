@@ -20,6 +20,7 @@ const envSchema = z.object({
   MAILCHIMP_API_KEY: z.string(),
   MAILCHIMP_SERVER_PREFIX: z.string().default("us12"),
   MAILCHIMP_LIST_ID: z.string().default("23a56060ac"),
+  SENDGRID_API_KEY: z.string(),
 });
 
 export default {
@@ -95,13 +96,6 @@ export default {
         environment: {
           NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
         },
-        permissions: [
-          new iam.PolicyStatement({
-            actions: ["ses:*", "iam:PassRole"],
-            effect: iam.Effect.ALLOW,
-            resources: ["*"],
-          }),
-        ],
       });
 
       const streakValuatorFunctionRole = new Role(stack, `streakValuatorFunctionRole-${app.stage}`, {
@@ -124,7 +118,7 @@ export default {
         timeout: 30,
         environment: {
           // Sst config uses top level await, next js server actions currently does not support this ( same for middleware).
-          // This is why we need to pass NEXT_PUBLIC_TABLE_NAME to the db client as an env variable.
+          // This is why we need to pass the env variables to the site construct.
           NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
           STREAK_VALUATOR_FUNCTION_ARN: streakValuatorFunction.functionArn,
           STREAK_VALUATOR_FUNCTION_ROLE_ARN: streakValuatorFunctionRole.roleArn,
