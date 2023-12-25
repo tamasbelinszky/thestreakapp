@@ -150,10 +150,6 @@ export default {
             : undefined,
       });
 
-      if (app.stage === "production") {
-        stack.getAllFunctions().forEach((fn) => cdk.Tags.of(fn).add("lumigo:auto-trace", "true"));
-      }
-
       stack.addOutputs({
         SiteUrl: site.url,
         tableName: myTable.tableName,
