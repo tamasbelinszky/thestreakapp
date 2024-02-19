@@ -50,6 +50,7 @@ export default {
         "MAILCHIMP_API_KEY",
         "MAILCHIMP_SERVER_PREFIX",
         "MAILCHIMP_LIST_ID",
+        "SENDGRID_API_KEY",
       );
 
       const myTable = new Table(stack, "table", {

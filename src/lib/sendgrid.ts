@@ -1,10 +1,11 @@
 "use server";
 
 import sendgridMail, { MailDataRequired } from "@sendgrid/mail";
+import { Config } from "sst/node/config";
 
 const SENDGRID_FROM_EMAIL_ADDRESS = "hello@thestreakapp.com";
 
-sendgridMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+sendgridMail.setApiKey(Config.SENDGRID_API_KEY);
 
 type SendEmailProps = Pick<MailDataRequired, "to" | "subject" | "html"> & { text: string };
 
