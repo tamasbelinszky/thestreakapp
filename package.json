@@ -14,7 +14,8 @@
     "start": "next start",
     "lint": "next lint",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@auth/dynamodb-adapter": "^1.0.5",

@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.16.0
+          node-version: 20.11.1
 
       - name: Copy .env.example to .env
         run: |
@@ -25,7 +25,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
-          version: 8.6.1
+          version: 8.15.4
           run_install: false
 
       - name: Get pnpm store directory
