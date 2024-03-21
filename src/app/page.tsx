@@ -1,21 +1,52 @@
 "use client";
 
 import { FeatureCard, features } from "@/components/FeatureCard";
-import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-6 lg:gap-24">
+    <div className="flex w-full flex-col items-center justify-center gap-6 p-2 lg:gap-24 lg:p-4">
+      <header className="flex w-full items-center justify-between bg-background p-4">
+        <Link href={"#"}>
+          <Image
+            src={"/thestreakapp-icon.png"}
+            width={64}
+            height={64}
+            alt="thestreakapp_icon"
+            className="hover:animate-spin"
+          />
+        </Link>
+        <nav>
+          <ul className="flex items-end gap-2">
+            <li>
+              <Link
+                href={"/login"}
+                className={buttonVariants({
+                  variant: "secondary",
+                })}
+              >
+                Sign In
+              </Link>
+            </li>
+            <li>
+              <Link href={"/login"} className={buttonVariants()}>
+                Get Started
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
       <section className="mt-8 flex flex-col items-center justify-center gap-4 lg:mt-24 lg:flex-row lg:justify-between">
-        <div className="container mx-auto text-center md:w-1/2 md:text-left">
-          <h1 className="mb-4 hidden text-4xl font-extrabold sm:block md:text-5xl">TheStreakApp</h1>
-          <h2 className="mb-6 text-2xl font-extrabold lg:font-semibold">Set and achieve goals.</h2>
-          <p className="mb-8 text-lg">Create streaks and track your progress. How long can you go?</p>
-          <Button className="w-full" onClick={() => signIn("", { callbackUrl: "/streak?signedInState=signedIn" })}>
+        <div className="flex flex-col justify-around gap-2 text-center md:h-[300px] md:w-1/2 md:text-left">
+          <h1 className="hidden text-4xl font-extrabold sm:block md:text-5xl">TheStreakApp</h1>
+          <h2 className="text-2xl font-extrabold lg:font-semibold">Set and achieve goals.</h2>
+          <p className="text-lg">Create streaks and track your progress. How long can you go?</p>
+
+          <Link href={"/login"} className={buttonVariants({ className: "w-full" })}>
             Get Started
-          </Button>
+          </Link>
         </div>
         <div className="mt-12 w-full md:w-1/2 lg:mt-0">
           <Image

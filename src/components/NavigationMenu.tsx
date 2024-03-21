@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Image from "next/image";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { PropsWithChildren, useEffect } from "react";
@@ -39,11 +38,8 @@ export function NavigationSheetMenu() {
     }
   }, [posthog, router, signedInState]);
 
-  if (session.status === "loading") {
-    return null;
-  }
-
   return user ? (
+    // TODO: implement a proper navigation menu
     <nav className="fixed right-0 top-0 z-50 flex h-12 items-center justify-center md:max-w-[200px] md:justify-start">
       <Sheet>
         <SheetTrigger asChild>
@@ -65,9 +61,7 @@ export function NavigationSheetMenu() {
         </SheetContent>
       </Sheet>
     </nav>
-  ) : (
-    <UnauthorizedHeader />
-  );
+  ) : null;
 }
 
 const MENU_ITEMS = [
@@ -99,29 +93,3 @@ export const NavigationMenuItems: React.FC<PropsWithChildren> = ({ children }) =
     </NavigationMenu>
   );
 };
-
-export const UnauthorizedHeader: React.FC = () => (
-  <header className="flex w-full items-end justify-between bg-white p-4">
-    <Image
-      src={"/thestreakapp-icon.png"}
-      width={64}
-      height={64}
-      alt="thestreakapp_icon"
-      className="hover:animate-spin"
-    />
-    <nav>
-      <ul className="flex items-end gap-2">
-        <li>
-          <Button variant={"secondary"} onClick={() => signIn("", { callbackUrl: "/streak?signedInState=signedIn" })}>
-            Sign In
-          </Button>
-        </li>
-        <li>
-          <Button variant={"default"} onClick={() => signIn("", { callbackUrl: "/streak?signedInState=signedIn" })}>
-            Get Started
-          </Button>
-        </li>
-      </ul>
-    </nav>
-  </header>
-);

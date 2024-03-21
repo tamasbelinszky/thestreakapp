@@ -21,6 +21,7 @@ const envSchema = z.object({
   MAILCHIMP_SERVER_PREFIX: z.string().default("us12"),
   MAILCHIMP_LIST_ID: z.string().default("23a56060ac"),
   SENDGRID_API_KEY: z.string(),
+  SMTP_FROM: z.string().default("hello@thestreakapp.com"),
 });
 
 export default {
@@ -51,6 +52,8 @@ export default {
         "MAILCHIMP_SERVER_PREFIX",
         "MAILCHIMP_LIST_ID",
         "SENDGRID_API_KEY",
+        "POSTMARK_API_TOKEN",
+        "POSTMARK_SIGN_IN_TEMPLATE",
       );
 
       const myTable = new Table(stack, "table", {

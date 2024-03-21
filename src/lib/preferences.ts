@@ -9,6 +9,7 @@ import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 
 const PreferenceEntity = new Entity(
+  // TODO: respect the user's preferences
   {
     model: {
       entity: "preference",
