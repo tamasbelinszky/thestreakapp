@@ -23,8 +23,10 @@ export default async function Page({ params }: { params: { streakId: string } })
   const initialChatMessages: Message[] = [
     {
       id: "1",
-      content: `Hi ${username},
-      I'm your personal assistant. I will help you to keep your streak going. ("${data.name}") You can ask me anything about your streak`,
+      content: `Hi ${username ?? "TheStreakAppUser🤙"},
+      I'm your personal assistant. I will help you to keep your streak going. ("${
+        data.name
+      }") You can ask me anything about your streak`,
       role: "assistant",
     },
     ...res

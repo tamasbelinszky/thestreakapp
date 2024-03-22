@@ -2,6 +2,7 @@
 
 import { useConfetti } from "@/hooks/useConfetti";
 import { completeStreakById, deleteStreakById } from "@/lib/streak";
+import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon, LucideRefreshCwOff, MessageCircleIcon } from "lucide-react";
@@ -41,7 +42,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
   return (
     <div
       className={clsx("flex flex-col gap-4 rounded-lg border-2 p-4 shadow-xl lg:p-8", {
-        "border-black bg-green-700 text-white": isCompleted,
+        "border-black bg-foreground text-background dark:bg-background dark:text-foreground": isCompleted,
         "bg-white text-gray-600": !isCompleted,
       })}
     >
@@ -54,7 +55,10 @@ export const StreakCard: React.FC<StreakCardProps> = ({
         <Popover>
           <PopoverTrigger asChild>
             <Button
-              className="py- rounded bg-transparent px-2 text-gray-800 hover:bg-gray-200 active:bg-gray-300"
+              // className={cn("hover:border-1", {
+              //   "bg-foreground text-background  dark:bg-background dark:text-foreground": isCompleted,
+              // })}
+              variant={isCompleted ? "default" : "secondary"}
               type="button"
             >
               <svg
@@ -132,6 +136,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({
       </div>
       <Button
         disabled={isPending}
+        variant={isCompleted ? "default" : "secondary"}
         onClick={async () => {
           if (isCompleted) {
             return confetti();

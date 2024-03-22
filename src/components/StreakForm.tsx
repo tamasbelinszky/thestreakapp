@@ -54,27 +54,27 @@ export const StreakForm = () => {
           Create New Streak
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex flex-col justify-center gap-1 overflow-scroll p-4 lg:p-8">
+      <DialogContent className="flex flex-col items-center justify-center gap-3 overflow-scroll p-4 lg:p-12">
         <DialogTitle>Create New Streak</DialogTitle>
         <Form {...form}>
-          <form onSubmit={onSubmit} className="space-y-2 lg:max-w-md">
-            <div className="gap2 flex w-full flex-col items-center gap-2 sm:flex-row">
+          <form onSubmit={onSubmit} className="space-y-3 lg:max-w-md">
+            <div className="flex w-full flex-col-reverse items-start gap-3 lg:flex-row lg:items-end">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Posting on LinkedIn" />
                     </FormControl>
-                    <FormDescription className="hidden lg:flex">The name of the action you take.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <Button
                 variant={"catchy"}
+                className="w-full p-2"
                 onClick={() => {
                   // TODO: good candidate for posthog experiment and / or A/B test
                   const { name, description, period } = getRandomMicroHabit();
@@ -96,8 +96,8 @@ export const StreakForm = () => {
                     <Textarea placeholder="Streak's description" {...field} />
                   </FormControl>
                   <FormDescription className="hidden lg:flex">
-                    Add a description to your streak that can be viewed on the respective streak item. This serves as a
-                    reminder of the purpose of the streak.
+                    This serves as a reminder of the streak&apos;s purpose and assists agents in better understanding
+                    it.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -215,7 +215,7 @@ export const StreakForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? "Loading..." : "Start a new streak"}
             </Button>
           </form>

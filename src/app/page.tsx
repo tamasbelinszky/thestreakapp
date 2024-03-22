@@ -1,13 +1,14 @@
 "use client";
 
 import { FeatureCard, features } from "@/components/FeatureCard";
+import { Icons } from "@/components/Icons";
 import { buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-6 p-2 lg:gap-24 lg:p-4">
+    <div className="flex w-full flex-col items-center justify-center gap-6 lg:gap-24">
       <header className="flex w-full items-center justify-between bg-background p-4">
         <Link href={"#"}>
           <Image
@@ -60,7 +61,7 @@ export default function Home() {
       </section>
 
       <section id="features" className="mt-12 flex flex-col gap-4 lg:mt-24 lg:gap-8">
-        <h2 className="text-center text-3xl font-bold">Features</h2>
+        <h2 className="text-center text-3xl font-extrabold md:text-4xl">Features</h2>
         <div className="flex flex-col gap-2 lg:gap-4">
           <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
             {features.slice(0, 2).map((feature, index) => (
@@ -75,8 +76,13 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="mt-12 flex  min-h-[50px] w-screen items-center justify-center gap-4 bg-gray-100 text-center lg:mt-24 lg:gap-8">
-        <p className="text-gray-600">© 2023 The Streak App - All rights reserved.</p>
+      <footer className="mt-12 flex min-h-[50px] w-screen items-center justify-center gap-4 bg-gray-100 p-4 text-center lg:mt-24 lg:gap-8 lg:p-8">
+        <p className="flex items-center gap-2 text-gray-600">
+          © 2023 The Streak App - All rights reserved.
+          <Link href={"https://github.com/tamasbelinszky/thestreakapp"}>
+            <Icons.github className="h-4 w-4" />
+          </Link>
+        </p>
       </footer>
     </div>
   );
