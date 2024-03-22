@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="flex flex-col gap-2 lg:w-1/2">
-        <div className="mb-2 flex flex-col items-center justify-center gap-2 lg:mb-8 lg:flex-row lg:justify-between">
+        <div className="flex flex-col items-center justify-center gap-2 py-2 lg:mb-8 lg:flex-row lg:justify-between">
           <Image
             className="hidden hover:animate-spin lg:block"
             src={"/icon.png"}

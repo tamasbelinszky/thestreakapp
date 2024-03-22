@@ -6,9 +6,7 @@ import { type DefaultUser, type NextAuthOptions as NextAuthConfig, Session, User
 import EmailProvider from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { redirect } from "next/dist/server/api-utils";
 import { Client } from "postmark";
-// TODO: It should rely on process.env or @aws-sdk/client-ssm + env at build time
 import { Config } from "sst/node/config";
 import { Table } from "sst/node/table";
 import { z } from "zod";

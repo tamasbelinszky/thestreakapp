@@ -56,7 +56,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </noscript>
 
           <Toaster />
-          <main className="min-h-screen bg-background p-2 font-sans antialiased">
+          <main className="min-h-screen bg-background px-2 font-sans antialiased">
             <AuthContext>
               <NavigationSheetMenu />
               <Suspense fallback={null}>{children}</Suspense>
