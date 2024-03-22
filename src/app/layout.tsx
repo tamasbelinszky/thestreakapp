@@ -1,4 +1,5 @@
 import { NavigationSheetMenu } from "@/components/NavigationMenu";
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
@@ -53,11 +54,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               className="invisible hidden"
             ></iframe>
           </noscript>
-          <main className="realtive flex h-screen w-full flex-col p-4 lg:p-8">
+
+          <Toaster />
+          <main className="min-h-screen bg-background p-2 font-sans antialiased">
             <AuthContext>
               <NavigationSheetMenu />
-
-              {children}
+              <Suspense fallback={null}>{children}</Suspense>
             </AuthContext>
           </main>
         </body>
