@@ -1,3 +1,4 @@
+import { getPreferenceByUserId } from "@/lib/preferences";
 import { sendStreakNotification } from "@/lib/sendgrid";
 import { evaluateStreak, getStreakById } from "@/lib/streak";
 import { putStreakEvent } from "@/lib/streakEvent";
@@ -22,7 +23,6 @@ export const handler: Handler<Event> = async (event) => {
     throw new Error("Streak not found");
   }
 
-  // TODO: transaction
   await evaluateStreak(streakId, streak.data.isCompleted, streak.data.autoComplete);
   await putStreakEvent({
     userId,
@@ -31,7 +31,20 @@ export const handler: Handler<Event> = async (event) => {
     currentStreak: streak.data.streak,
     autoComplete: streak.data.autoComplete,
   });
+
   const user = await getUserById(userId);
+  const preference = await getPreferenceByUserId(userId);
+
+  if (!preference.data?.acceptsStreakNotifications) {
+    console.info(`User ${userId} has disabled streak notifications. Skip sending streak notification.`);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Streak ${streakId} reset successfully.`,
+      }),
+    };
+  }
+
   await sendStreakNotification({
     to: user.email,
     dynamicTemplateData: {

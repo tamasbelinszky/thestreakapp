@@ -9,7 +9,6 @@ import { auth } from "./auth";
 import { Dynamo } from "./dynamo";
 
 const PreferenceEntity = new Entity(
-  // TODO: respect the user's preferences
   {
     model: {
       entity: "preference",
@@ -72,6 +71,14 @@ export const getPreference = async () => {
 
   const userId = maybeUser.user.id;
 
+  const preference = await PreferenceEntity.get({
+    userId,
+  }).go();
+
+  return preference;
+};
+
+export const getPreferenceByUserId = async (userId: string) => {
   const preference = await PreferenceEntity.get({
     userId,
   }).go();

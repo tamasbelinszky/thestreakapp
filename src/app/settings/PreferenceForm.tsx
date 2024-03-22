@@ -5,6 +5,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "@/components/ui/use-toast";
 import { putPreference } from "@/lib/preferences";
 import { cn } from "@/lib/utils";
 import { basePreferenceSchema } from "@/schemas/preference";
@@ -29,9 +30,12 @@ export const PreferenceForm: React.FC<Partial<PreferenceFormValues>> = (props) =
   const onSubmit = form.handleSubmit(async (data) => {
     startTransition(async () => {
       await putPreference(data);
+      toast({
+        title: "Preferences updated",
+        description: "Your preferences have been successfully updated.",
+      });
       router.refresh();
     });
-    console.log("data", data);
   });
 
   return (
