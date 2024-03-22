@@ -5,7 +5,7 @@ import { PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk
 import iam from "aws-cdk-lib/aws-iam";
 import dotenv from "dotenv";
 import { SSTConfig } from "sst";
-import { Config, Function, NextjsSite, Table } from "sst/constructs";
+import { Config, Function, NextjsSite, Table, attachPermissionsToRole } from "sst/constructs";
 import { z } from "zod";
 
 dotenv.config();
@@ -133,13 +133,7 @@ export default {
         experimental: {
           streaming: true,
         },
-        permissions: [
-          new iam.PolicyStatement({
-            actions: ["scheduler:*", "iam:PassRole"],
-            effect: iam.Effect.ALLOW,
-            resources: ["*"],
-          }),
-        ],
+        permissions: ["scheduler:*", "iam:PassRole"],
         customDomain:
           app.stage === "production"
             ? {

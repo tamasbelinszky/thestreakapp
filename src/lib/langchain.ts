@@ -9,6 +9,7 @@ import { getStreakById } from "./streak";
 
 export const model = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
+  modelName: "gpt-3.5-turbo",
   streaming: true,
 });
 
