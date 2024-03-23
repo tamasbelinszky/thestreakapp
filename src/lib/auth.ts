@@ -50,6 +50,7 @@ const dynamoDbClient = DynamoDBDocument.from(new DynamoDB(awsConfig), {
 export const nextAuthConfig = {
   pages: {
     signIn: "/login",
+    verifyRequest: "/login/verify-request",
   },
   providers: [
     GithubProvider({
@@ -64,6 +65,11 @@ export const nextAuthConfig = {
       from: SMTP_FROM,
       sendVerificationRequest: async ({ identifier, url, provider }) => {
         console.log("sendVerificationRequest", { identifier, url, provider });
+
+        if (process.env.NODE_ENV !== "production") {
+          console.log(`Skip sending email in development: ${identifier}`);
+          return;
+        }
 
         const result = await postmarkClient.sendEmailWithTemplate({
           TemplateId: parseInt(Config.POSTMARK_SIGN_IN_TEMPLATE),

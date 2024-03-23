@@ -13,13 +13,11 @@ export const baseStreakSchema = z.object({
   }),
   period: z.enum(PERIODS),
   autoComplete: z.boolean(),
+  isCompleted: z.boolean().default(false),
+  streak: z.number().default(0),
 });
 
 export const fullStreakSchema = baseStreakSchema.extend({
   isCompleted: z.boolean(),
   streak: z.number().optional(),
-});
-
-export const editableStreakSchema = baseStreakSchema.extend({
-  isCompleted: z.boolean(),
 });

@@ -7,6 +7,7 @@ import {
   Loader2,
   LucideIcon,
   LucideProps,
+  MailIcon,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -19,6 +20,7 @@ export const Icons = {
   checkmark: CheckIcon,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
+  mail: MailIcon,
   github: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

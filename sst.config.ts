@@ -1,11 +1,9 @@
 import { RemovalPolicy } from "aws-cdk-lib";
-import * as cdk from "aws-cdk-lib";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import iam from "aws-cdk-lib/aws-iam";
 import dotenv from "dotenv";
 import { SSTConfig } from "sst";
-import { Config, Function, NextjsSite, Table, attachPermissionsToRole } from "sst/constructs";
+import { Config, Function, NextjsSite, Table } from "sst/constructs";
 import { z } from "zod";
 
 dotenv.config();
@@ -101,6 +99,7 @@ export default {
         functionName: `streakValuatorFunction-${app.stage}`,
         environment: {
           NEXT_PUBLIC_TABLE_NAME: myTable.tableName,
+          ...env,
         },
       });
 

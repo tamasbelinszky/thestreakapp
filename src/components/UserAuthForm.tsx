@@ -38,23 +38,20 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     console.log("onSubmit", { data });
     const signInResult = await signIn("email", {
       email: data.email.toLowerCase(),
+      redirect: true,
       callbackUrl: "/streak?signedInState=signedIn",
     });
 
     setIsLoading(false);
 
-    if (!signInResult?.ok) {
+    if (signInResult?.status && !signInResult.ok) {
+      console.log("Sign in failed", signInResult);
       return toast({
         title: "Something went wrong.",
         description: "Your sign in request failed. Please try again.",
         variant: "destructive",
       });
     }
-
-    return toast({
-      title: "Check your email",
-      description: "We sent you a login link. Be sure to check your spam too.",
-    });
   }
 
   return (

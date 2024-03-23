@@ -16,6 +16,8 @@ import { useEffect } from "react";
 
 import { Separator } from "./ui/separator";
 
+const PUBLIC_ROUTES = ["/", "/login", "/login/verify-request"];
+
 const MENU_ITEMS = [
   {
     name: "Streaks",
@@ -54,7 +56,8 @@ export function NavigationSheetMenu() {
   }, [posthog, router, signedInState]);
 
   return (
-    session.status !== "unauthenticated" && (
+    session.status !== "unauthenticated" &&
+    !PUBLIC_ROUTES.includes(pathname) && (
       <Sheet>
         <SheetTrigger className="absolute right-2 top-2 p-2">
           <MenuIcon />

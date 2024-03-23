@@ -1,4 +1,4 @@
-import { EditableStreakCard } from "@/components/EditableStreakCard";
+import { StreakFormEdit } from "@/components/StreakFormEdit";
 import { getStreakById } from "@/lib/streak";
 
 export default async function Page({ params }: { params: { id: string } }) {
@@ -9,7 +9,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <EditableStreakCard
+    <StreakFormEdit
       name={streak.name}
       description={streak.description}
       startDate={new Date(streak.startDate as number)}
@@ -18,6 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       autoComplete={streak.autoComplete}
       id={streak.id}
       key={streak.id}
+      streak={streak.streak}
     />
   );
 }

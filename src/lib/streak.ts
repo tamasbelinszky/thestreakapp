@@ -140,7 +140,6 @@ export const getStreaksByUserId = async (userId: string) => {
 };
 
 export const deleteStreakById = async (id: string) => {
-  // TODO: transaction
   await deleteStreakSchedule(id);
   return StreakEntity.delete({ id }).go();
 };

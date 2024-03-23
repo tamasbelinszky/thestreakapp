@@ -25,7 +25,7 @@ const periods = [
   { label: "Weekly", value: "weekly" },
 ] as const;
 
-export const StreakForm = () => {
+export const StreakFormCreate = () => {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();

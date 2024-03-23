@@ -2,17 +2,17 @@
 
 import { StreakFormInput, editStreakById } from "@/lib/streak";
 import { cn } from "@/lib/utils";
-import { fullStreakSchema } from "@/schemas/streak";
+import { baseStreakSchema } from "@/schemas/streak";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Icons } from "./Icons";
 import { Button, buttonVariants } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "./ui/command";
@@ -27,13 +27,13 @@ const periods = [
   { label: "Weekly", value: "weekly" },
 ] as const;
 
-export const EditableStreakCard: React.FC<z.infer<typeof fullStreakSchema> & { isCompleted: boolean; id: string }> = (
+export const StreakFormEdit: React.FC<z.infer<typeof baseStreakSchema> & { isCompleted: boolean; id: string }> = (
   props,
 ) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<StreakFormInput & { isCompleted: boolean }>({
-    resolver: zodResolver(fullStreakSchema),
+    resolver: zodResolver(baseStreakSchema),
     defaultValues: props,
   });
 
@@ -47,9 +47,12 @@ export const EditableStreakCard: React.FC<z.infer<typeof fullStreakSchema> & { i
 
   return (
     <div className="flex flex-col items-center justify-center gap-1 p-8">
-      <Link href={"/streak"} className={buttonVariants({ size: "sm", variant: "ghost" })}>
-        <ArrowLeftIcon />
-      </Link>
+      <nav className="absolute left-2 top-2">
+        <Link href="/streak" className={buttonVariants({ variant: "ghost" })}>
+          <Icons.chevronLeft className="mr-2 h-4 w-4" />
+          Back
+        </Link>
+      </nav>
       <h1 className="text-xl font-bold">Edit Streak</h1>
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-2 lg:max-w-md">

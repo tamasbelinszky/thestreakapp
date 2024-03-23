@@ -2,7 +2,6 @@
 
 import { useConfetti } from "@/hooks/useConfetti";
 import { completeStreakById, deleteStreakById } from "@/lib/streak";
-import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { DeleteIcon, EditIcon, LucideRefreshCwOff, MessageCircleIcon } from "lucide-react";

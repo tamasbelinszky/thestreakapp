@@ -1,4 +1,4 @@
-import { StreakForm } from "@/components/StreakForm";
+import { StreakFormCreate } from "@/components/StreakFormCreate";
 import StreakList from "@/components/StreakList";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
@@ -16,7 +16,7 @@ export default function Page() {
             height={64}
             alt="thestreakapp_icon"
           />
-          <StreakForm />
+          <StreakFormCreate />
         </div>
         <Suspense fallback={<Skeleton />}>
           <StreakList />
