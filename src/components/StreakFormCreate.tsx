@@ -54,7 +54,7 @@ export const StreakFormCreate = () => {
           Create New Streak
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex flex-col items-center justify-center gap-3 overflow-scroll p-4 lg:p-12">
+      <DialogContent className="flex w-full flex-col items-center justify-center gap-3 p-4 lg:p-12">
         <DialogTitle>Create New Streak</DialogTitle>
         <Form {...form}>
           <form onSubmit={onSubmit} className="space-y-3 lg:max-w-md">
