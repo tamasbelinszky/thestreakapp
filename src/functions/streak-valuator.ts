@@ -1,9 +1,9 @@
+import { lambdaHandler } from "@/implementations/handler";
 import { getPreferenceByUserId } from "@/lib/preferences";
 import { sendStreakNotification } from "@/lib/sendgrid";
 import { evaluateStreak, getStreakById } from "@/lib/streak";
 import { putStreakEvent } from "@/lib/streakEvent";
 import { getUserById } from "@/lib/user";
-import { type Handler } from "aws-lambda";
 import { format } from "date-fns";
 import { z } from "zod";
 
@@ -12,9 +12,7 @@ const eventSchema = z.object({
   streakId: z.string(),
 });
 
-type Event = z.infer<typeof eventSchema>;
-
-export const handler: Handler<Event> = async (event) => {
+export const handler = lambdaHandler(eventSchema, async (event) => {
   const { streakId, userId } = eventSchema.parse(event);
 
   const streak = await getStreakById(streakId);
@@ -66,4 +64,4 @@ export const handler: Handler<Event> = async (event) => {
       message: `Streak ${streakId} reset successfully.`,
     }),
   };
-};
+});

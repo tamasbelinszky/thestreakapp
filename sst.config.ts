@@ -1,3 +1,4 @@
+import * as cdk from "aws-cdk-lib";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { Certificate } from "aws-cdk-lib/aws-certificatemanager";
 import { PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
@@ -137,6 +138,10 @@ export default {
               }
             : undefined,
       });
+
+      if (app.stage === "production") {
+        stack.getAllFunctions().forEach((fn) => cdk.Tags.of(fn).add("lumigo:auto-trace", "true"));
+      }
 
       stack.addOutputs({
         SiteUrl: site.url,
