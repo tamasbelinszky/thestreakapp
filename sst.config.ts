@@ -80,17 +80,6 @@ export default {
           },
         },
         timeToLiveAttribute: "expires",
-        stream: true,
-        consumers: {
-          dynamoDbStreamConsumer: {
-            function: {
-              timeout: 30,
-              functionName: `dynamoDbStreamConsumer-${app.stage}`,
-              handler: "src/functions/dynamodb-stream.handler",
-              bind: [...Object.values(secretParams)],
-            },
-          },
-        },
       });
 
       const streakValuatorFunction = new Function(stack, `streakValuatorFunction-${app.stage}`, {
