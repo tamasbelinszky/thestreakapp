@@ -4,6 +4,7 @@ import { PERIODS } from "@/app/constants";
 import { baseStreakSchema } from "@/schemas/streak";
 import { randomUUID } from "crypto";
 import { Entity } from "electrodb";
+import { Config } from "sst/node/config";
 import { z } from "zod";
 
 import { auth } from "./auth";
@@ -106,10 +107,12 @@ export type StreakFormInput = z.infer<typeof baseStreakSchema>;
 
 export const createStreak = async (input: StreakFormInput) => {
   const maybeUser = await auth();
-  const maybeUserId = maybeUser?.user?.id;
-  if (!maybeUserId) {
+  if (!maybeUser?.user?.id) {
     throw new Error("Unauthorized");
   }
+  const {
+    user: { id: userId },
+  } = maybeUser;
 
   const validatedInput = baseStreakSchema.parse({
     ...input,
@@ -119,12 +122,17 @@ export const createStreak = async (input: StreakFormInput) => {
   const result = await StreakEntity.put({
     ...validatedInput,
     startDate: validatedInput.startDate.getTime(),
-    userId: maybeUserId,
+    userId,
     streak: 0,
   }).go();
 
+  if (Config.STAGE !== "production") {
+    console.info("Successfully created streak. Stage is not production. Skipping createOrUpdateStreakSchedule.");
+    return;
+  }
+
   await createOrUpdateStreakSchedule({
-    userId: maybeUserId,
+    userId,
     streakId: result.data.id,
     streakPeriod: validatedInput.period,
     startTime: validatedInput.startDate.getTime(),
